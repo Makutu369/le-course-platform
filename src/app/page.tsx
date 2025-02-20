@@ -214,7 +214,7 @@ export default function Home() {
                   className="flex flex-col justify-between space-y-4 rounded-xl border p-6 shadow-sm"
                 >
                   <p className="text-muted-foreground italic">
-                    "{testimonial.quote}"
+                    {testimonial.quote}
                   </p>
                   <div className="flex items-center space-x-4">
                     <div>
@@ -299,8 +299,7 @@ export default function Home() {
                   <Button type="submit">Sign Up</Button>
                 </form>
                 <p className="text-xs text-muted-foreground">
-                  Join our church's learning community and grow in faith
-                  together
+                  Join our churchs learning community and grow in faith together
                 </p>
               </div>
             </div>
