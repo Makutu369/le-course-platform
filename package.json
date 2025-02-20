@@ -35,6 +35,6 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "*.{tsx, ts}": "eslint --cache --fix"
   }
 }
