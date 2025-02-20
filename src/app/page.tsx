@@ -311,7 +311,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
             <Church className="h-6 w-6" />
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              © 2024 Church Learning Center. All rights reserved.
+              © 2025 Church Learning Center. All rights reserved.
             </p>
           </div>
           <div className="flex gap-4">
