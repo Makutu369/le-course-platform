@@ -16,8 +16,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Church className="h-6 w-6" />
-            <span className="font-bold">Church Learning Center</span>
+            <span className="font-bold">Love Economy Church</span>
           </Link>
           <nav className="hidden gap-6 md:flex">
             <Link
