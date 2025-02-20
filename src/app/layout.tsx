@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Love courses",
-  description: "Welcome to Gods Family",
+  description: "Access all love economy courses from this page",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.className} antialiased `}>{children}</body>
+      <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
 }

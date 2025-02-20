@@ -8,16 +8,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Heart, Users, HandIcon as PrayingHands, Church } from "lucide-react";
+import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
+        <div className="container max-w-7xl tracking-tight mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Church className="h-6 w-6" />
-            <span className="font-bold">Church Learning Center</span>
+            <span className="font-bold">Love Economy Church</span>
           </Link>
           <nav className="hidden gap-6 md:flex">
             <Link
@@ -56,21 +55,21 @@ export default function Home() {
         <section className="relative w-full min-h-[80vh]">
           <div className="absolute inset-0">
             <Image
-              src="/placeholder.svg?height=800&width=1920"
+              src="/wtgf.jpg"
               alt="Church community learning together"
               fill
               className="object-cover brightness-50"
               priority
             />
           </div>
-          <div className="relative z-10 flex min-h-[80vh] items-center text-foreground">
+          <div className="relative z-10 flex min-h-[80vh] items-center text-white">
             <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Love Economy Church training platform
                   </h1>
-                  <p className="mx-auto max-w-[600px] text-xl text-muted-foreground">
+                  <p className="mx-auto max-w-[600px] text-xl text-white/85">
                     Access educational programs and spiritual development
                     courses
                   </p>
@@ -310,7 +309,6 @@ export default function Home() {
       <footer className="border-t py-6 md:py-0">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-            <Church className="h-6 w-6" />
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
               © 2024 Church Learning Center. All rights reserved.
             </p>
