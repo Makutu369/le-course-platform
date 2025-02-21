@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
 import { LoginModal } from "./(components)/login-modal";
-import ThemeToggle from "./(components)/theme-mode";
 
 export default function Home() {
   return (
@@ -327,7 +326,6 @@ export default function Home() {
             >
               About
             </Link>
-            <ThemeToggle />
           </div>
         </div>
       </footer>
