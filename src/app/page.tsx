@@ -9,6 +9,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
+import { LoginModal } from "./(components)/login-modal";
+import ThemeToggle from "./(components)/theme-mode";
 
 export default function Home() {
   return (
@@ -39,12 +41,7 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Login
-            </Link>
+            <LoginModal />
             <Button>Sign Up</Button>
           </div>
         </div>
@@ -92,7 +89,7 @@ export default function Home() {
         </section>
 
         {/* Current Programs Section */}
-        <section className="w-full py-16 md:py-24">
+        <section className=" bg-muted w-full py-16 md:py-24">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -116,7 +113,7 @@ export default function Home() {
                 <Link
                   key={category}
                   href="#"
-                  className="group relative overflow-hidden rounded-lg border bg-background p-6 hover:shadow-md transition-shadow"
+                  className="group relative overflow-hidden rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
                 >
                   <h3 className="font-semibold text-lg mb-2">{category}</h3>
                   <p className="text-sm text-muted-foreground">
@@ -306,14 +303,14 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t py-6 md:py-0">
+      <footer className="bg-muted py-6 md:py-0">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
               © 2024 Church Learning Center. All rights reserved.
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <Link
               href="#"
               className="text-sm text-muted-foreground hover:underline"
@@ -332,6 +329,7 @@ export default function Home() {
             >
               About
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </footer>
