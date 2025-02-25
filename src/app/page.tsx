@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
-import { LoginModal } from "./(components)/login-modal";
+import AuthDialog from "./(components)/auth/auth-dialog";
 
 export default function Home() {
   return (
@@ -38,8 +38,7 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <LoginModal />
-            <Button>Sign Up</Button>
+            <AuthDialog />
           </div>
         </div>
       </header>

@@ -1,0 +1,43 @@
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Icons } from "./icons"
+
+interface SignInFormProps {
+  onToggleMode: () => void
+}
+
+export function SignInForm({ onToggleMode }: SignInFormProps) {
+  return (
+    <div className="grid gap-4">
+      <Button variant="outline" className="relative">
+        <Icons.google className="mr-2 h-4 w-4" />
+        Sign in with Google
+      </Button>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" type="email" placeholder="m@example.com" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="password">Password</Label>
+        <Input id="password" type="password" />
+      </div>
+      <Button>Sign In</Button>
+      <div className="text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <button onClick={onToggleMode} className="underline hover:text-primary">
+          Sign up
+        </button>
+      </div>
+    </div>
+  )
+}
+
