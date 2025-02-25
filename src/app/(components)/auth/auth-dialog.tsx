@@ -20,7 +20,7 @@ export default function AuthDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Sign In</Button>
+        <Button variant="ghost">Sign In</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Icons } from "./icons"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Icons } from "./icons";
 
 interface SignInFormProps {
-  onToggleMode: () => void
+  onToggleMode: () => void;
 }
 
 export function SignInForm({ onToggleMode }: SignInFormProps) {
   return (
     <div className="grid gap-4">
-      <Button variant="outline" className="relative">
+      <Button variant="secondary" className="relative">
         <Icons.google className="mr-2 h-4 w-4" />
         Sign in with Google
       </Button>
@@ -19,7 +19,9 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
         </div>
       </div>
       <div className="grid gap-2">
@@ -38,6 +40,5 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }
-

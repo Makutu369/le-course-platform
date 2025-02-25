@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Icons } from "./icons"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Icons } from "./icons";
 
 interface SignUpFormProps {
-  onToggleMode: () => void
+  onToggleMode: () => void;
 }
 
 export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   return (
     <div className="grid gap-4">
-      <Button variant="outline" className="relative">
+      <Button variant="secondary" className="relative">
         <Icons.google className="mr-2 h-4 w-4" />
         Sign up with Google
       </Button>
@@ -19,18 +19,20 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
         </div>
       </div>
       <div className="grid gap-2">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex gap-4">
           <div className="grid gap-2">
             <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" type="text" placeholder="John" />
+            <Input id="firstName" type="text" placeholder="First name" />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" type="text" placeholder="Doe" />
+            <Input id="lastName" type="text" placeholder="Last name" />
           </div>
         </div>
       </div>
@@ -50,6 +52,5 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }
-
