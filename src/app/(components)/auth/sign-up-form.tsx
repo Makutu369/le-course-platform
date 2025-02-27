@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Icons } from "./icons";
 
 interface SignUpFormProps {
   onToggleMode: () => void;
@@ -11,7 +10,6 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   return (
     <div className="grid gap-4">
       <Button variant="secondary" className="relative">
-        <Icons.google className="mr-2 h-4 w-4" />
         Sign up with Google
       </Button>
       <div className="relative">
