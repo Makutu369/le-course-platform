@@ -1,4 +1,13 @@
-import { pgTable, serial, varchar, date } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  varchar,
+  date,
+  integer,
+  uuid,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { timestamps } from "./column_helper";
 
 export const users = pgTable("users", {
@@ -16,3 +25,28 @@ export const users = pgTable("users", {
   gender: varchar("gender", { enum: ["male", "female"] }),
   ...timestamps,
 });
+
+export const sessions = pgTable("sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: integer("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  token: text("token").notNull(),
+  deviceType: varchar("device_type", { length: 50 }).notNull(),
+  deviceName: varchar("device_name", { length: 100 }).notNull(),
+  browser: varchar("browser", { length: 50 }).notNull(),
+  operatingSystem: varchar("operating_system", { length: 50 }).notNull(),
+  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;
