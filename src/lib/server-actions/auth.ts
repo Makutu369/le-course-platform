@@ -1,8 +1,6 @@
-import { findUserByEmail, comparePassword, createUser } from '../queries/auth';
-import { generateToken } from '../queries/auth';
 "use server";
-
-
+import { findUserByEmail, comparePassword, createUser } from "../queries/auth";
+import { generateToken } from "../queries/auth";
 
 export async function handleLogin(formData: FormData) {
   try {
@@ -26,8 +24,12 @@ export async function handleLogin(formData: FormData) {
       return { error: "Invalid credentials." };
     }
 
-    const token = generateToken({ id: user[0].id, email: user[0].email, role: user[0].role });
-    console.log("Login successful, Token:", user );
+    const token = generateToken({
+      id: user[0].id,
+      email: user[0].email,
+      role: user[0].role,
+    });
+    console.log("Login successful, Token:", user);
 
     return { success: true, token, user: user[0] };
   } catch (error) {
@@ -35,8 +37,6 @@ export async function handleLogin(formData: FormData) {
     return { error: "An error occurred during login." };
   }
 }
-
-
 
 export async function handleSignup(formData: FormData) {
   try {
