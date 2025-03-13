@@ -1,12 +1,30 @@
+import { signUp } from "@/app/(actions)/login";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ActionState } from "@/lib/middleware";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface SignUpFormProps {
   onToggleMode: () => void;
 }
 
 export function SignUpForm({ onToggleMode }: SignUpFormProps) {
+  const [state, action, pending] = useActionState<ActionState, FormData>(
+    signUp,
+    {
+      error: "",
+      data: {},
+    }
+  );
+
+  useEffect(() => {
+    if (!pending && state.error) {
+      toast.error(state.error);
+    }
+  }, [pending, state.error]);
+
   return (
     <div className="grid gap-4">
       <Button variant="secondary" className="relative">
@@ -22,27 +40,54 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
           </span>
         </div>
       </div>
-      <div className="grid gap-2">
-        <div className="flex gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" type="text" placeholder="First name" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" type="text" placeholder="Last name" />
+      <form>
+        <div className="grid gap-2">
+          <div className="flex gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                type="text"
+                placeholder="First name"
+                defaultValue={state.data?.firstName}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                defaultValue={state.data?.lastName}
+                type="text"
+                placeholder="Last name"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="m@example.com" />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" />
-      </div>
-      <Button>Create Account</Button>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            defaultValue={state.data?.email}
+            placeholder="m@example.com"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" name="password" type="password" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="password">Confirm password</Label>
+          <Input id="confirmPassword" name="confirmPassword" type="password" />
+        </div>
+
+        <Button type="submit" formAction={action} className="mt-3">
+          Create Account
+        </Button>
+      </form>
       <div className="text-center text-sm">
         Already have an account?{" "}
         <button onClick={onToggleMode} className="underline hover:text-primary">

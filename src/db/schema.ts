@@ -9,6 +9,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { timestamps } from "./column_helper";
+import { relations } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -44,6 +45,12 @@ export const sessions = pgTable("sessions", {
     .defaultNow()
     .notNull(),
 });
+
+//relations
+
+export const userRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+}));
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
