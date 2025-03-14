@@ -35,7 +35,7 @@ export async function findUserByEmail(email: string) {
 }
 
 export function generateToken(user: {
-  id: number;
+  id: string;
   email: string;
   role: string;
 }) {
