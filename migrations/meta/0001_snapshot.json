@@ -1,6 +1,6 @@
 {
-  "id": "8903aa77-b478-4323-a9e2-e94f81e01c9c",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "b26c87cd-05d6-45bb-af62-5212a129057d",
+  "prevId": "8903aa77-b478-4323-a9e2-e94f81e01c9c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -82,6 +82,12 @@
         "title": {
           "name": "title",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "video_url": {
+          "name": "video_url",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
