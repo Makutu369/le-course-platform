@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased `}>{children}</body>
+      <body className={`${inter.className} antialiased `}>
+        {children}
+        <Toaster richColors />
+      </body>
     </html>
   );
 }

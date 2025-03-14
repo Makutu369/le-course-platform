@@ -90,21 +90,16 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                  Current Programs
+                  Programs
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
-                  Join our ongoing courses and grow with your church community
-                </p>
               </div>
             </div>
             <div className="mx-auto grid gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
               {[
-                "Bible Study Foundations",
-                "Prayer & Meditation",
-                "Christian Leadership",
-                "Family & Marriage",
-                "Youth Ministry",
-                "Community Service",
+                "Temelios",
+                "Welcome To God's family",
+                "Shepherds Training",
+                "Cell Shepherd Training",
               ].map((category) => (
                 <Link
                   key={category}

@@ -24,7 +24,7 @@ body {
     --accent-foreground: 262.1 4% 10%;
     --destructive: 0 50% 30%;
     --destructive-foreground: 262.1 4% 90%;
-    --border: 262.1 20% 50%;
+    --border: 262.1 20% 80%;
     --input: 262.1 20% 18%;
     --ring: 262.1 88.3% 57.8%;
     --radius: 0.5rem;
@@ -61,8 +61,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {
