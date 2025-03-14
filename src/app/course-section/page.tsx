@@ -7,124 +7,125 @@ import { CourseNavigation } from "../(components)/course-video-section/course-na
 import { CourseProgressBar } from "../(components)/course-video-section/course-progress-bar"
 import type { CourseVideo, CourseProgress } from "../../lib/types/course"
 
-// Sample course data
+// Replace the courseVideos array with this updated version that has gospel-themed content
 const courseVideos: CourseVideo[] = [
   {
     id: "1",
-    title: "Big Buck Bunny",
+    title: "Born Again",
     thumbnailUrl:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Big_Buck_Bunny_thumbnail_vlc.png/1200px-Big_Buck_Bunny_thumbnail_vlc.png",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "Vlc Media Player",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    uploadTime: "May 9, 2023",
+    views: "24,969",
+    author: "Pastor John Davis",
+    videoUrl: "https://youtu.be/3AqS0G1DGpo",
     description:
-      "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
-    subscriber: "25254545 Subscribers",
-    isLive: true,
+      "In this powerful message, Pastor John explores the concept of being born again as described in John 3. What does it mean to be spiritually reborn? How does this transformation impact our daily lives and our relationship with God? This foundational teaching will help both new believers and seasoned Christians understand the miracle of spiritual rebirth.\n\nScripture references: John 3:1-21, 2 Corinthians 5:17, 1 Peter 1:23",
+    subscriber: "125,450 Subscribers",
+    isLive: false,
   },
   {
     id: "2",
-    title: "The first Blender Open Movie from 2006",
+    title: "The Holy Spirit",
     thumbnailUrl: "https://i.ytimg.com/vi_webp/gWw23EYM9VM/maxresdefault.webp",
     duration: "12:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "Blender Inc.",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    uploadTime: "June 15, 2023",
+    views: "18,742",
+    author: "Dr. Sarah Williams",
+    videoUrl: "https://www.youtube.com/watch?v=n0ovdfWiQXM&t=2111s&pp=ygUYYmlzaG9wIGlzYWFjIG90aSBib2F0ZW5n",
     description:
-      "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-    subscriber: "25254545 Subscribers",
-    isLive: true,
+      "Who is the Holy Spirit and what role does He play in the life of a believer? Dr. Williams provides a comprehensive biblical understanding of the third person of the Trinity. Learn about the gifts, fruits, and baptism of the Holy Spirit, and how to cultivate a deeper relationship with Him in your daily walk.\n\nScripture references: John 14:15-17, Acts 1:8, Galatians 5:22-23, 1 Corinthians 12:4-11",
+    subscriber: "98,325 Subscribers",
+    isLive: false,
   },
   {
     id: "3",
-    title: "For Bigger Blazes",
+    title: "Your Walk with God",
     thumbnailUrl: "https://i.ytimg.com/vi/Dr9C2oswZfA/maxresdefault.jpg",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "T-Series Regional",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    uploadTime: "July 3, 2023",
+    views: "15,632",
+    author: "Pastor Michael Johnson",
+    videoUrl: "https://www.youtube.com/watch?v=8UjkRgRdWx0",
     description:
-      "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-    subscriber: "25254545 Subscribers",
-    isLive: true,
+      "Developing a consistent and meaningful relationship with God is essential for spiritual growth. Pastor Michael shares practical insights on establishing a daily devotional life, prayer habits, and Bible study techniques that will transform your walk with God. This message includes testimonies of transformed lives and practical steps for spiritual disciplines.\n\nScripture references: Psalm 119:105, James 4:8, Hebrews 4:12, Philippians 4:6-7",
+    subscriber: "87,210 Subscribers",
+    isLive: false,
   },
   {
     id: "4",
-    title: "For Bigger Escape",
+    title: "Working with God",
     thumbnailUrl: "https://img.jakpost.net/c/2019/09/03/2019_09_03_78912_1567484272._large.jpg",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "T-Series Regional",
+    uploadTime: "August 12, 2023",
+    views: "12,845",
+    author: "Rev. Elizabeth Chen",
     videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     description:
-      " Introducing Chromecast. The easiest way to enjoy online video and music on your TV—for when Batman's escapes aren't quite big enough. For $35. Learn how to use Chromecast with Google Play Movies and more at google.com/chromecast.",
-    subscriber: "25254545 Subscribers",
+      "God invites us to be co-laborers in His kingdom work. Rev. Chen explores how we can partner with God in fulfilling His purposes on earth. This inspiring message covers topics such as discovering your spiritual gifts, finding your ministry calling, and understanding how God works through ordinary people to accomplish extraordinary things.\n\nScripture references: 1 Corinthians 3:9, Ephesians 2:10, Philippians 2:12-13, 2 Timothy 1:9",
+    subscriber: "76,540 Subscribers",
     isLive: false,
   },
   {
     id: "5",
-    title: "Big Buck Bunny",
+    title: "The Holy Spirit Working on Your Character",
     thumbnailUrl:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Big_Buck_Bunny_thumbnail_vlc.png/1200px-Big_Buck_Bunny_thumbnail_vlc.png",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "Vlc Media Player",
+    uploadTime: "September 5, 2023",
+    views: "10,723",
+    author: "Pastor John Davis",
     videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     description:
-      "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
-    subscriber: "25254545 Subscribers",
-    isLive: true,
+      "Character transformation is a lifelong process led by the Holy Spirit. In this follow-up message, Pastor John examines how the Holy Spirit works to develop Christ-like character in believers. Learn about the fruit of the Spirit, overcoming character flaws, and cooperating with God's refining process in your life.\n\nScripture references: Galatians 5:22-23, Romans 8:29, 2 Corinthians 3:18, Philippians 1:6",
+    subscriber: "125,450 Subscribers",
+    isLive: false,
   },
   {
     id: "6",
-    title: "For Bigger Blazes",
+    title: "Soul Winning",
     thumbnailUrl: "https://i.ytimg.com/vi/Dr9C2oswZfA/maxresdefault.jpg",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "T-Series Regional",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    uploadTime: "October 18, 2023",
+    views: "9,587",
+    author: "Evangelist David Thompson",
+    videoUrl: "https://www.youtube.com/watch?v=X3-RTgcEPBc&pp=ygUYYmlzaG9wIGlzYWFjIG90aSBib2F0ZW5n",
     description:
-      "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-    subscriber: "25254545 Subscribers",
+      "Sharing the gospel effectively is both an art and a spiritual discipline. Evangelist Thompson provides practical tools and biblical principles for sharing your faith with confidence and compassion. This message includes real-life examples, conversation starters, and approaches for different contexts and relationships.\n\nScripture references: Matthew 28:19-20, Acts 1:8, Romans 10:14-15, 1 Peter 3:15",
+    subscriber: "65,320 Subscribers",
     isLive: false,
   },
   {
     id: "7",
-    title: "For Bigger Escape",
+    title: "Marriage Conference",
     thumbnailUrl: "https://img.jakpost.net/c/2019/09/03/2019_09_03_78912_1567484272._large.jpg",
     duration: "8:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "T-Series Regional",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    uploadTime: "November 7, 2023",
+    views: "14,256",
+    author: "Dr. Robert & Mary Wilson",
+    videoUrl: "https://www.youtube.com/watch?v=5ROpenhnx9M&pp=ygUYYmlzaG9wIGlzYWFjIG90aSBib2F0ZW5n",
     description:
-      " Introducing Chromecast. The easiest way to enjoy online video and music on your TV—for when Batman's escapes aren't quite big enough. For $35. Learn how to use Chromecast with Google Play Movies and more at google.com/chromecast.",
-    subscriber: "25254545 Subscribers",
-    isLive: true,
+      "Building a Christ-centered marriage requires intentionality and biblical wisdom. In this special conference session, Dr. Robert and Mary Wilson share principles for healthy communication, conflict resolution, and spiritual intimacy in marriage. Whether you're preparing for marriage or have been married for decades, this message offers practical insights for strengthening your relationship.\n\nScripture references: Ephesians 5:21-33, 1 Corinthians 13:4-7, Genesis 2:24, Colossians 3:18-19",
+    subscriber: "92,780 Subscribers",
+    isLive: false,
   },
   {
     id: "8",
-    title: "The first Blender Open Movie from 2006",
+    title: "The Holy Spirit and the Church",
     thumbnailUrl: "https://i.ytimg.com/vi_webp/gWw23EYM9VM/maxresdefault.webp",
     duration: "12:18",
-    uploadTime: "May 9, 2011",
-    views: "24,969,123",
-    author: "Blender Inc.",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    uploadTime: "December 12, 2023",
+    views: "8,934",
+    author: "Bishop Thomas Anderson",
+    videoUrl: "https://www.youtube.com/watch?v=5I1thNOdZlY&pp=ygUYYmlzaG9wIGlzYWFjIG90aSBib2F0ZW5n",
     description:
-      "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-    subscriber: "25254545 Subscribers",
+      "The Holy Spirit empowers the church to fulfill its mission in the world. Bishop Anderson examines the vital relationship between the Holy Spirit and the body of Christ throughout church history and in the present day. This teaching covers topics such as corporate worship, spiritual gifts in the church context, and the Spirit's role in unity and diversity within the congregation.\n\nScripture references: Acts 2:1-47, 1 Corinthians 12:12-31, Ephesians 4:1-16, Revelation 2-3",
+    subscriber: "103,450 Subscribers",
     isLive: false,
   },
 ]
 
+// Update the page title to reflect gospel content
 export default function CoursePage() {
   // Initialize progress from localStorage or with defaults
   const [progress, setProgress] = useState<CourseProgress>(() => {
@@ -193,7 +194,7 @@ export default function CoursePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8 text-slate-800">Web Development Masterclass</h1>
+        <h1 className="text-3xl font-bold mb-8 text-slate-800">Welcome to God&apos;s Family</h1>
 
         <CourseProgressBar videos={courseVideos} progress={progress} />
 
@@ -208,7 +209,7 @@ export default function CoursePage() {
             <div className="bg-white rounded-xl shadow-sm p-6 transition-all duration-300">
               <h2 className="text-2xl font-bold mb-2 text-slate-800">{currentVideo.title}</h2>
               <p className="text-sm text-slate-500 mb-4">
-                Instructor: {currentVideo.author} • Duration: {currentVideo.duration}
+                Speaker: {currentVideo.author} • Duration: {currentVideo.duration}
               </p>
 
               <div className="bg-slate-50 rounded-lg p-5 border border-slate-100">
