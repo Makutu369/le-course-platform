@@ -1,5 +1,4 @@
 import { sessions, User } from "@/db/schema";
-import { sign } from "jsonwebtoken";
 import { cookies, headers } from "next/headers";
 import { UAParser } from "ua-parser-js";
 import { SessionData, signToken, verifyToken } from "./jwt";
