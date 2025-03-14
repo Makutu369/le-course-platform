@@ -72,7 +72,7 @@ export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps
   }
 
   return (
-    <div className="relative w-full bg-black rounded-lg overflow-hidden">
+    <div className="relative w-full bg-black rounded-xl overflow-hidden shadow-md">
       <video
         ref={videoRef}
         src={video.videoUrl}
@@ -86,21 +86,24 @@ export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps
       {/* Custom controls */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
         <div className="flex flex-col gap-2">
-          <div className="relative w-full h-1 bg-gray-600 rounded-full">
-            <div className="absolute top-0 left-0 h-full bg-primary rounded-full" style={{ width: `${progress}%` }} />
+          <div className="relative w-full h-1.5 bg-white/20 rounded-full">
+            <div
+              className="absolute top-0 left-0 h-full bg-sky-500 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="text-white h-8 px-2" onClick={togglePlay}>
+              <Button variant="ghost" size="sm" className="text-white h-8 px-2 hover:bg-white/10" onClick={togglePlay}>
                 {isPlaying ? "Pause" : "Play"}
               </Button>
-              <span className="text-xs text-white">
+              <span className="text-xs text-white/90">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
             </div>
 
-            {isCompleted && <span className="text-xs text-green-400">Completed</span>}
+            {isCompleted && <span className="text-xs text-emerald-400">Completed</span>}
           </div>
         </div>
       </div>

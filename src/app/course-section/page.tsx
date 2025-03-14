@@ -191,13 +191,13 @@ export default function CoursePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-6">
-        <h1 className="text-3xl font-bold mb-6">Web Development Masterclass</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-8 text-slate-800">Web Development Masterclass</h1>
 
         <CourseProgressBar videos={courseVideos} progress={progress} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2 space-y-6">
             <VideoPlayer
               video={currentVideo}
@@ -205,15 +205,15 @@ export default function CoursePage() {
               isCompleted={progress.completedVideos.includes(currentVideo.id)}
             />
 
-            <div>
-              <h2 className="text-2xl font-bold mb-2">{currentVideo.title}</h2>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="bg-white rounded-xl shadow-sm p-6 transition-all duration-300">
+              <h2 className="text-2xl font-bold mb-2 text-slate-800">{currentVideo.title}</h2>
+              <p className="text-sm text-slate-500 mb-4">
                 Instructor: {currentVideo.author} • Duration: {currentVideo.duration}
               </p>
 
-              <div className="bg-card border rounded-lg p-4">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-sm whitespace-pre-line">{currentVideo.description}</p>
+              <div className="bg-slate-50 rounded-lg p-5 border border-slate-100">
+                <h3 className="font-semibold mb-2 text-slate-700">Description</h3>
+                <p className="text-sm whitespace-pre-line text-slate-600">{currentVideo.description}</p>
               </div>
 
               <CourseNavigation
