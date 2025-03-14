@@ -6,7 +6,6 @@ import { db } from "@/db";
 import { NewUser, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { comparePassword, hashPassword } from "@/lib/queries/auth";
-import { redirect } from "next/navigation";
 
 const signUpSchema = z
   .object({
@@ -44,6 +43,9 @@ const signInSchema = z.object({
 export const signUp = validatedAction(signUpSchema, async (data) => {
   const { email, password, firstName, lastName } = data;
   console.log("data is", data);
+  if (!email || !password) {
+    return { error: "Email and password are required.", data };
+  }
   const existingUser = await db
     .select()
     .from(users)
@@ -54,23 +56,30 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
     return { error: "Email already taken. Please try again.", data };
   }
 
-  const passwordHash = await hashPassword(password);
-
-  const newUser: NewUser = {
-    email,
-    password: passwordHash,
-    firstName,
-    lastName,
-  };
-
-  const [createdUser] = await db.insert(users).values(newUser).returning();
-
-  if (!createdUser) {
-    return { error: "Failed to create user. Please try again.", data };
+  try {
+    const passwordHash = await hashPassword(password);
+    const newUser: NewUser = {
+      email,
+      password: passwordHash,
+      firstName,
+      lastName,
+    };
+  
+    const [createdUser] = await db.insert(users).values(newUser).returning();
+    console.log("created user is", createdUser);
+    if (!createdUser) {
+      return { error: "Failed to create user. Please try again.", data };
+    }
+    await setSession(createdUser);
+    return { success: true, data: createdUser };
+  
+  } catch (error) {
+    console.error("Error during signup:", error);
+    return { error: "An error occurred during signup.", data };
+    
   }
-  await setSession(createdUser);
-  redirect("/courses");
-});
+}
+ );
 
 export const signIn = validatedAction(signInSchema, async (data) => {
   const { email, password } = data;
@@ -98,5 +107,5 @@ export const signIn = validatedAction(signInSchema, async (data) => {
     return { error: "Invalid username or password. Please try again.", data };
   }
   await setSession(foundUser);
-  redirect("/courses");
+  return { success: true, data: foundUser };
 });
