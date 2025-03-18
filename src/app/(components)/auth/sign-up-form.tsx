@@ -22,8 +22,11 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   useEffect(() => {
     if (!pending && state.error) {
       toast.error(state.error);
+    } else if (!pending && state.data) {
+      toast.success("Account created successfully.");
+      console.log("Account created successfully.", state.data);
     }
-  }, [pending, state.error]);
+  }, [pending, state.error, state.data]);
 
   return (
     <div className="grid gap-4">
@@ -40,10 +43,10 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
           </span>
         </div>
       </div>
-      <form>
+      <form className="flex flex-col gap-y-2">
         <div className="grid gap-2">
           <div className="flex gap-4">
-            <div className="grid gap-2">
+            <div className="grid gap-2 my-2">
               <Label htmlFor="firstName">First Name</Label>
               <Input
                 id="firstName"
@@ -53,7 +56,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
                 defaultValue={state.data?.firstName}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-2 my-2">
               <Label htmlFor="lastName">Last Name</Label>
               <Input
                 id="lastName"
@@ -65,7 +68,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
             </div>
           </div>
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 my-2">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -75,16 +78,16 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
             placeholder="m@example.com"
           />
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 my-2">
           <Label htmlFor="password">Password</Label>
           <Input id="password" name="password" type="password" />
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 my-2">
           <Label htmlFor="password">Confirm password</Label>
           <Input id="confirmPassword" name="confirmPassword" type="password" />
         </div>
 
-        <Button type="submit" formAction={action} className="mt-3">
+        <Button type="submit" formAction={action} className="mt-3 w-full">
           Create Account
         </Button>
       </form>

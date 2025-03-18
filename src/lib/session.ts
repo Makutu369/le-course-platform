@@ -1,4 +1,5 @@
 import { sessions, User } from "@/db/schema";
+import bcrypt from "bcryptjs";
 import { cookies, headers } from "next/headers";
 import { UAParser } from "ua-parser-js";
 import { SessionData, signToken, verifyToken } from "./jwt";
@@ -11,7 +12,12 @@ export async function setSession(user: User) {
     user: { id: user.id, role: user.role },
     expires: expiresInOneDay.toISOString(),
   };
+  console.log("Setting session for user:", user); // Log the user object
 
+  if (!user?.id || !user?.role) {
+    console.error("User object is missing required fields:", user);
+    throw new Error("User object is missing required fields");
+  }
   const token = await signToken(session);
 
   const userAgent = (await headers()).get("user-agent") || "";
@@ -28,12 +34,24 @@ export async function setSession(user: User) {
       parser.getDevice().model || parser.getOS().name || "Unknown Device",
   };
 
-  await db.insert(sessions).values({
-    userId: user.id,
-    token,
-    ...deviceInfo,
-    expiresAt: expiresInOneDay,
-  });
+  console.log("Device Info:", deviceInfo);
+  try {
+    const result = await db.insert(sessions).values({
+      userId: user.id,
+      token,
+      ...deviceInfo,
+      expiresAt: expiresInOneDay,
+    }).returning();
+
+    console.log("Session insert result:", result); // Log DB insert result
+
+    if (result.length === 0) {
+      throw new Error("Failed to insert session into database.");
+    }
+  } catch (error) {
+    console.error("Error inserting session:", error);
+    throw new Error("Database insert failed");
+  }
 
   (await cookies()).set("session", token, {
     expires: expiresInOneDay,
@@ -51,10 +69,12 @@ export async function getSession() {
   const session = await db.query.sessions.findFirst({
     where: (sessions, { eq }) => eq(sessions.token, sessionCookie.value),
   });
+
   if (!session) return null;
 
   const sessionData = await verifyToken(sessionCookie.value);
-  if (!sessionData?.user?.id || typeof sessionData.user.id !== "number")
+
+  if (!sessionData?.user?.id || typeof sessionData.user.id !== "string")
     return null;
   if (new Date(sessionData.expires) < new Date()) return null;
 
@@ -69,7 +89,14 @@ export async function getSession() {
 export async function terminateSession(sessionId: string) {
   const { db } = await import("@/db");
   const currentUser = await getSession();
-  if (!currentUser?.userId) throw new Error("Unauthorized");
+  
+  if (!currentUser?.userId) {
+    console.error("Unauthorized: No user session found.");
+    throw new Error("Unauthorized");
+  }
+
+  console.log("Attempting to terminate session:", sessionId);
+  console.log("Current user ID:", currentUser.userId);
 
   const result = await db
     .delete(sessions)
@@ -78,5 +105,26 @@ export async function terminateSession(sessionId: string) {
     )
     .returning();
 
-  return result.length > 0;
+  console.log("Deletion result:", result);
+
+  if (result.length === 0) {
+    console.warn("Session not found or already terminated.");
+    throw new Error("Session not found or already terminated.");
+  }
+
+  return true;
+}
+
+export async function hashPassword(password: string) {
+  const salt = await bcrypt.genSalt(10);
+  const result = await bcrypt.hash(password, salt);
+  return result;
+}
+
+export async function comparaPassword(
+  password: string,
+  hashedPassword: string
+) {
+  const result = await bcrypt.compare(password, hashedPassword);
+  return result;
 }
