@@ -46,29 +46,34 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
             </span>
           </div>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="m@example.com"
-          />
+        <div className="w-full h-full flex-col flex gap-y-3">
+          <div className="grid gap-2 ">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              defaultValue={signInState.data?.email}
+              name="email"
+              placeholder="m@example.com"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              defaultValue={signInState.data?.password}
+              type="password"
+            />
+          </div>
+          <Button type="submit" formAction={signInFormActions}>
+            {signInPending ? <p>loading ....</p> : <p>Sign In</p>}
+          </Button>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" name="password" type="password" />
-        </div>
-        <Button type="submit" formAction={signInFormActions}>
-          {signInPending ? <p>loading ....</p> : <p>Sign In</p>}
-        </Button>
       </form>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <button
-          formAction={onToggleMode}
-          className="underline hover:text-primary"
-        >
+        <button onClick={onToggleMode} className="underline hover:text-primary">
           Sign up
         </button>
       </div>

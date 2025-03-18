@@ -33,7 +33,7 @@ export async function setSession(user: User) {
     userId: user.id,
     token,
     ...deviceInfo,
-    expiresAt: String(expiresInOneDay),
+    expiresAt: expiresInOneDay,
   });
 
   (await cookies()).set("session", token, {
@@ -63,7 +63,7 @@ export async function getSession() {
 
   await db
     .update(sessions)
-    .set({ lastActiveAt: String(new Date()) })
+    .set({ lastActiveAt: new Date() })
     .where(eq(sessions.id, session.id));
 
   return session;

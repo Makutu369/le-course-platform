@@ -40,7 +40,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
           </span>
         </div>
       </div>
-      <form>
+      <form className="flex flex-col gap-y-2">
         <div className="grid gap-2">
           <div className="flex gap-4">
             <div className="grid gap-2">

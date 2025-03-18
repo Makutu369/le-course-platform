@@ -57,13 +57,11 @@ export const sessions = pgTable(
     operatingSystem: varchar("operating_system", { length: 50 }).notNull(),
     lastActiveAt: timestamp("last_active_at", {
       withTimezone: true,
-      mode: "string",
     })
       .defaultNow()
       .notNull(),
     expiresAt: timestamp("expires_at", {
       withTimezone: true,
-      mode: "string",
     }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .defaultNow()
