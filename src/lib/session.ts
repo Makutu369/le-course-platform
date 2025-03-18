@@ -1,4 +1,5 @@
 import { sessions, User } from "@/db/schema";
+import bcrypt from "bcryptjs";
 import { cookies, headers } from "next/headers";
 import { UAParser } from "ua-parser-js";
 import { SessionData, signToken, verifyToken } from "./jwt";
@@ -32,7 +33,7 @@ export async function setSession(user: User) {
     userId: user.id,
     token,
     ...deviceInfo,
-    expiresAt: expiresInOneDay,
+    expiresAt: String(expiresInOneDay),
   });
 
   (await cookies()).set("session", token, {
@@ -51,16 +52,18 @@ export async function getSession() {
   const session = await db.query.sessions.findFirst({
     where: (sessions, { eq }) => eq(sessions.token, sessionCookie.value),
   });
+
   if (!session) return null;
 
   const sessionData = await verifyToken(sessionCookie.value);
-  if (!sessionData?.user?.id || typeof sessionData.user.id !== "number")
+
+  if (!sessionData?.user?.id || typeof sessionData.user.id !== "string")
     return null;
   if (new Date(sessionData.expires) < new Date()) return null;
 
   await db
     .update(sessions)
-    .set({ lastActiveAt: new Date() })
+    .set({ lastActiveAt: String(new Date()) })
     .where(eq(sessions.id, session.id));
 
   return session;
@@ -79,4 +82,18 @@ export async function terminateSession(sessionId: string) {
     .returning();
 
   return result.length > 0;
+}
+
+export async function hashPassword(password: string) {
+  const salt = await bcrypt.genSalt(10);
+  const result = await bcrypt.hash(password, salt);
+  return result;
+}
+
+export async function comparaPassword(
+  password: string,
+  hashedPassword: string
+) {
+  const result = await bcrypt.compare(password, hashedPassword);
+  return result;
 }

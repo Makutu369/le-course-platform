@@ -1,119 +1,176 @@
 import {
   pgTable,
-  varchar,
-  date,
-  integer,
   uuid,
   text,
+  varchar,
   timestamp,
-  boolean,
+  date,
+  foreignKey,
   primaryKey,
+  boolean,
 } from "drizzle-orm/pg-core";
-import { timestamps } from "./column_helper";
-import { relations } from "drizzle-orm";
+import { relations } from "drizzle-orm/relations";
+
+export const courses = pgTable("courses", {
+  id: uuid().defaultRandom().primaryKey().notNull(),
+  title: text().notNull(),
+  description: varchar({ length: 255 }),
+  imageUrl: text("image_url"),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
+});
 
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  email: varchar("email", { length: 255 }).notNull(),
-  password: varchar("password", { length: 255 }).notNull(),
+  id: uuid().defaultRandom().primaryKey().notNull(),
+  email: varchar({ length: 255 }).notNull(),
+  password: varchar({ length: 255 }).notNull(),
   firstName: varchar("first_name", { length: 100 }),
   lastName: varchar("last_name", { length: 100 }),
   otherNames: varchar("other_names", { length: 100 }),
-  role: varchar("role", { length: 50, enum: ["user", "admin"] })
-    .default("user")
-    .notNull(), // user, admin, etc.
+  role: varchar({ length: 50 }).default("user").notNull(),
   profilePicture: varchar("profile_picture", { length: 255 }),
   dateOfBirth: date("date_of_birth"),
-  gender: varchar("gender", { enum: ["male", "female"] }),
-  ...timestamps,
-});
-
-export const sessions = pgTable("sessions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  token: text("token").notNull(),
-  deviceType: varchar("device_type", { length: 50 }).notNull(),
-  deviceName: varchar("device_name", { length: 100 }).notNull(),
-  browser: varchar("browser", { length: 50 }).notNull(),
-  operatingSystem: varchar("operating_system", { length: 50 }).notNull(),
-  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+  gender: varchar(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
     .defaultNow()
     .notNull(),
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
     .defaultNow()
     .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
 });
 
-export const courses = pgTable("courses", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title").notNull(),
-  description: varchar("description", { length: 255 }),
-  imageUrl: text("image_url"),
-  ...timestamps,
-});
+export const sessions = pgTable(
+  "sessions",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    token: text().notNull(),
+    deviceType: varchar("device_type", { length: 50 }).notNull(),
+    deviceName: varchar("device_name", { length: 100 }).notNull(),
+    browser: varchar({ length: 50 }).notNull(),
+    operatingSystem: varchar("operating_system", { length: 50 }).notNull(),
+    lastActiveAt: timestamp("last_active_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "sessions_user_id_users_id_fk",
+    }).onDelete("cascade"),
+  ]
+);
 
-export const sections = pgTable("sections", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  courseId: uuid("course_id")
-    .notNull()
-    .references(() => courses.id, { onDelete: "cascade" }),
-  title: text("title").notNull(),
-  videoUrl: varchar("video_url", { length: 255 }).notNull(),
-  ...timestamps,
-});
+export const sections = pgTable(
+  "sections",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    courseId: uuid("course_id").notNull(),
+    title: text().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
+    videoUrl: varchar("video_url", { length: 255 }).notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.courseId],
+      foreignColumns: [courses.id],
+      name: "sections_course_id_courses_id_fk",
+    }).onDelete("cascade"),
+  ]
+);
 
 export const userCourses = pgTable(
   "user_courses",
   {
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    courseId: uuid("course_id")
-      .notNull()
-      .references(() => courses.id, { onDelete: "cascade" }),
-    enrolledAt: timestamp("enrolled_at").defaultNow(),
-    completed: boolean("completed").default(false),
+    userId: uuid("user_id").notNull(),
+    courseId: uuid("course_id").notNull(),
+    enrolledAt: timestamp("enrolled_at", { mode: "string" }).defaultNow(),
+    completed: boolean().default(false),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.userId, table.courseId] }),
-  })
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "user_courses_user_id_users_id_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.courseId],
+      foreignColumns: [courses.id],
+      name: "user_courses_course_id_courses_id_fk",
+    }).onDelete("cascade"),
+    primaryKey({
+      columns: [table.userId, table.courseId],
+      name: "user_courses_user_id_course_id_pk",
+    }),
+  ]
 );
 
 export const userSections = pgTable(
   "user_sections",
   {
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    sectionId: uuid("section_id")
-      .notNull()
-      .references(() => sections.id, { onDelete: "cascade" }),
-    courseId: uuid("course_id")
-      .notNull()
-      .references(() => courses.id, { onDelete: "cascade" }),
-    completedAt: timestamp("completed_at"),
+    userId: uuid("user_id").notNull(),
+    sectionId: uuid("section_id").notNull(),
+    courseId: uuid("course_id").notNull(),
+    completedAt: timestamp("completed_at", { mode: "string" }),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.userId, table.sectionId] }),
-  })
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "user_sections_user_id_users_id_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.sectionId],
+      foreignColumns: [sections.id],
+      name: "user_sections_section_id_sections_id_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.courseId],
+      foreignColumns: [courses.id],
+      name: "user_sections_course_id_courses_id_fk",
+    }).onDelete("cascade"),
+    primaryKey({
+      columns: [table.userId, table.sectionId],
+      name: "user_sections_user_id_section_id_pk",
+    }),
+  ]
 );
-
 //relations
-export const userRelations = relations(users, ({ many }) => ({
-  sessions: many(sessions),
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
-  enrolledCourses: many(userCourses),
-  completedSections: many(userSections),
-}));
-
-export const coursesRelations = relations(courses, ({ many }) => ({
-  sections: many(sections),
-  enrolledUsers: many(userCourses),
+  sessions: many(sessions),
+  userCourses: many(userCourses),
+  userSections: many(userSections),
 }));
 
 export const sectionsRelations = relations(sections, ({ one, many }) => ({
@@ -121,7 +178,13 @@ export const sectionsRelations = relations(sections, ({ one, many }) => ({
     fields: [sections.courseId],
     references: [courses.id],
   }),
-  completedByUsers: many(userSections),
+  userSections: many(userSections),
+}));
+
+export const coursesRelations = relations(courses, ({ many }) => ({
+  sections: many(sections),
+  userCourses: many(userCourses),
+  userSections: many(userSections),
 }));
 
 export const userCoursesRelations = relations(userCourses, ({ one }) => ({
@@ -159,5 +222,8 @@ export type NewSession = typeof sessions.$inferInsert;
 export type Course = typeof courses.$inferSelect;
 export type NewCourse = typeof courses.$inferInsert;
 
-export type CourseSection = typeof sections.$inferSelect;
-export type NewCourseSection = typeof sections.$inferInsert;
+export type CourseSections = typeof sections.$inferSelect;
+export type NewCourseSections = typeof sections.$inferInsert;
+
+export type userCourseSections = typeof userSections.$inferInsert;
+export type userCourseSectionsSelect = typeof userSections.$inferInsert;

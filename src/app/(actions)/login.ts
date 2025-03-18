@@ -1,12 +1,10 @@
 "use server";
 import { z } from "zod";
 import { validatedAction } from "@/lib/middleware";
-import { setSession } from "@/lib/session";
+import { comparaPassword, hashPassword, setSession } from "@/lib/session";
 import { db } from "@/db";
 import { NewUser, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { comparePassword, hashPassword } from "@/lib/queries/auth";
-import { redirect } from "next/navigation";
 
 const signUpSchema = z
   .object({
@@ -55,7 +53,6 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
   }
 
   const passwordHash = await hashPassword(password);
-
   const newUser: NewUser = {
     email,
     password: passwordHash,
@@ -69,7 +66,7 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
     return { error: "Failed to create user. Please try again.", data };
   }
   await setSession(createdUser);
-  redirect("/courses");
+  return { success: true };
 });
 
 export const signIn = validatedAction(signInSchema, async (data) => {
@@ -89,7 +86,7 @@ export const signIn = validatedAction(signInSchema, async (data) => {
 
   const { user: foundUser } = user[0];
 
-  const isPasswordValid = await comparePassword(
+  const isPasswordValid = await comparaPassword(
     password,
     foundUser?.password || ""
   );
@@ -98,5 +95,5 @@ export const signIn = validatedAction(signInSchema, async (data) => {
     return { error: "Invalid username or password. Please try again.", data };
   }
   await setSession(foundUser);
-  redirect("/courses");
+  return { success: true };
 });
