@@ -1,6 +1,6 @@
 {
-  "id": "c267bf18-7f64-47c9-b378-c2b62bfc03c3",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "1a520eec-a2c7-4b37-b750-bc58c9b8fac9",
+  "prevId": "03c37a12-c079-4e58-8832-7632795666f2",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -85,11 +85,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "video_url": {
-          "name": "video_url",
-          "type": "varchar(255)",
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -110,6 +110,12 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "video_url": {
+          "name": "video_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},

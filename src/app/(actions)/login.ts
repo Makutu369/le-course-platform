@@ -1,11 +1,10 @@
 "use server";
 import { z } from "zod";
 import { validatedAction } from "@/lib/middleware";
-import { setSession } from "@/lib/session";
+import { comparaPassword, hashPassword, setSession } from "@/lib/session";
 import { db } from "@/db";
 import { NewUser, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { comparePassword, hashPassword } from "@/lib/queries/auth";
 
 const signUpSchema = z
   .object({
@@ -56,30 +55,22 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
     return { error: "Email already taken. Please try again.", data };
   }
 
-  try {
-    const passwordHash = await hashPassword(password);
-    const newUser: NewUser = {
-      email,
-      password: passwordHash,
-      firstName,
-      lastName,
-    };
-  
-    const [createdUser] = await db.insert(users).values(newUser).returning();
-    console.log("created user is", createdUser);
-    if (!createdUser) {
-      return { error: "Failed to create user. Please try again.", data };
-    }
-    await setSession(createdUser);
-    return { success: true, data: createdUser };
-  
-  } catch (error) {
-    console.error("Error during signup:", error);
-    return { error: "An error occurred during signup.", data };
-    
+  const passwordHash = await hashPassword(password);
+  const newUser: NewUser = {
+    email,
+    password: passwordHash,
+    firstName,
+    lastName,
+  };
+
+  const [createdUser] = await db.insert(users).values(newUser).returning();
+
+  if (!createdUser) {
+    return { error: "Failed to create user. Please try again.", data };
   }
-}
- );
+  await setSession(createdUser);
+  return { success: true };
+});
 
 export const signIn = validatedAction(signInSchema, async (data) => {
   const { email, password } = data;
@@ -98,7 +89,7 @@ export const signIn = validatedAction(signInSchema, async (data) => {
 
   const { user: foundUser } = user[0];
 
-  const isPasswordValid = await comparePassword(
+  const isPasswordValid = await comparaPassword(
     password,
     foundUser?.password || ""
   );
@@ -107,5 +98,5 @@ export const signIn = validatedAction(signInSchema, async (data) => {
     return { error: "Invalid username or password. Please try again.", data };
   }
   await setSession(foundUser);
-  return { success: true, data: foundUser };
+  return { success: true };
 });

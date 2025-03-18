@@ -1,81 +1,84 @@
-"use client"
+"use client";
 
-import { useRef, useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import type { CourseVideo } from "../../../lib/types/course"
+import { useRef, useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface VideoPlayerProps {
-  video: CourseVideo
-  onComplete: () => void
-  isCompleted: boolean
+  videoUrl: string;
+  onComplete?: () => void;
+  isCompleted?: boolean;
 }
 
-export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
+export function VideoPlayer({
+  videoUrl,
+  onComplete,
+  isCompleted,
+}: VideoPlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    const videoElement = videoRef.current
-    if (!videoElement) return
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
 
     const handleTimeUpdate = () => {
       if (videoElement.currentTime && videoElement.duration) {
-        setCurrentTime(videoElement.currentTime)
-        setProgress((videoElement.currentTime / videoElement.duration) * 100)
+        setCurrentTime(videoElement.currentTime);
+        setProgress((videoElement.currentTime / videoElement.duration) * 100);
 
         // Check if video is completed (within 1 second of the end)
         if (videoElement.duration - videoElement.currentTime < 1) {
-          onComplete()
+          //  onComplete();
         }
       }
-    }
+    };
 
     const handleLoadedMetadata = () => {
-      setDuration(videoElement.duration)
-    }
+      setDuration(videoElement.duration);
+    };
 
     const handleEnded = () => {
-      setIsPlaying(false)
-      onComplete()
-    }
+      setIsPlaying(false);
+      // onComplete();
+    };
 
-    videoElement.addEventListener("timeupdate", handleTimeUpdate)
-    videoElement.addEventListener("loadedmetadata", handleLoadedMetadata)
-    videoElement.addEventListener("ended", handleEnded)
+    videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+    videoElement.addEventListener("ended", handleEnded);
 
     return () => {
-      videoElement.removeEventListener("timeupdate", handleTimeUpdate)
-      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata)
-      videoElement.removeEventListener("ended", handleEnded)
-    }
-  }, [onComplete])
+      videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      videoElement.removeEventListener("ended", handleEnded);
+    };
+  }, [onComplete]);
 
   const togglePlay = () => {
-    const videoElement = videoRef.current
-    if (!videoElement) return
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
 
     if (isPlaying) {
-      videoElement.pause()
+      videoElement.pause();
     } else {
-      videoElement.play()
+      videoElement.play();
     }
-    setIsPlaying(!isPlaying)
-  }
+    setIsPlaying(!isPlaying);
+  };
 
   const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = Math.floor(seconds % 60)
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   return (
-    <div className="relative w-full bg-black rounded-xl overflow-hidden shadow-md">
+    <div className="relative w- bg-black rounded-xl overflow-hidden shadow-md">
       <video
         ref={videoRef}
-        src={video.videoUrl}
+        src={videoUrl}
         className="w-full aspect-video"
         onClick={togglePlay}
         onPlay={() => setIsPlaying(true)}
@@ -95,7 +98,12 @@ export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="text-white h-8 px-2 hover:bg-white/10" onClick={togglePlay}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white h-8 px-2 hover:bg-white/10"
+                onClick={togglePlay}
+              >
                 {isPlaying ? "Pause" : "Play"}
               </Button>
               <span className="text-xs text-white/90">
@@ -103,7 +111,9 @@ export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps
               </span>
             </div>
 
-            {isCompleted && <span className="text-xs text-emerald-400">Completed</span>}
+            {isCompleted && (
+              <span className="text-xs text-emerald-400">Completed</span>
+            )}
           </div>
         </div>
       </div>
@@ -119,6 +129,5 @@ export function VideoPlayer({ video, onComplete, isCompleted }: VideoPlayerProps
         }
       `}</style>
     </div>
-  )
+  );
 }
-
