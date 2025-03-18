@@ -1,14 +1,7 @@
 "use server";
-import { db } from "@/db";
 import { getCourseSections } from "@/lib/queries/queries";
 import { CourseSidebar } from "@/app/(components)/course-video-section/course-sidebar";
 import { VideoPlayer } from "@/app/(components)/course-video-section/video-player";
-
-export async function generateStaticParams() {
-  const courses = await db.query.courses.findMany();
-  const courseIds = courses.map((course) => ({ id: course.id }));
-  return courseIds;
-}
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id: courseId } = await params;

@@ -75,7 +75,7 @@ export function VideoPlayer({
   };
 
   return (
-    <div className="relative w-full bg-black rounded-xl overflow-hidden shadow-md">
+    <div className="relative w- bg-black rounded-xl overflow-hidden shadow-md">
       <video
         ref={videoRef}
         src={videoUrl}
