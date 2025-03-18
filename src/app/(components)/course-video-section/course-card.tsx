@@ -1,80 +1,62 @@
-import Image from "next/image"
-import Link from "next/link"
-import { PlayCircle, Clock, BookOpen } from "lucide-react"
-import { cn } from "@/lib/utils"
-import type { Course } from "../../../lib/types/course-catalogue"
+"use client";
+import { Card, CardContent } from "@/components/ui/card";
+import { accessCourse } from "@/lib/queries/queries";
+import Image from "next/image";
+import Link from "next/link";
 
+// Update the interface to match the database schema
 interface CourseCardProps {
-  course: Course
-  className?: string
+  id: string;
+  title: string;
+  description?: string | null;
+  imageUrl?: string | null;
+  price?: number | null;
+  userId?: string | null;
 }
 
-export function CourseCard({ course, className }: CourseCardProps) {
+export default function CourseCard({
+  id,
+  title,
+  description,
+  imageUrl,
+  price = 0,
+  userId,
+}: CourseCardProps) {
+  const formatPrice = (price: number) => `$${(price / 100).toFixed(2)}`;
+
   return (
-    <Link
-      href={`/courses/${course.slug}`}
-      className={cn(
-        "group flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md",
-        className,
-      )}
+    <Card
+      className="overflow-hidden w-60 h-60 transition-all duration-300 hover:shadow-lg"
+      onClick={() => accessCourse({ courseId: id, userId: userId ?? "" })}
     >
       <div className="relative aspect-video overflow-hidden">
         <Image
-          src={course.thumbnailUrl || "/placeholder.svg"}
-          alt={course.title}
+          src={imageUrl || "/placeholder.svg?height=480&width=640"}
+          alt={title}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-300 hover:scale-105"
+          priority
         />
-        {course.isFeatured && (
-          <div className="absolute top-2 right-2 rounded-full bg-sky-500 px-2 py-0.5 text-xs font-medium text-white">
-            Featured
-          </div>
-        )}
-        {course.progress !== undefined && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-200">
-            <div className="h-full bg-emerald-500" style={{ width: `${course.progress}%` }} />
-          </div>
-        )}
       </div>
-
-      <div className="flex flex-1 flex-col p-4">
-        <div className="mb-2 flex items-center gap-2">
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-            {course.level}
-          </span>
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-            {course.category}
-          </span>
+      <CardContent className="p-4">
+        <Link href={`/courses/${id}`} className="block">
+          <h3 className="font-bold text-lg line-clamp-2 mb-1 hover:text-primary transition-colors">
+            {title}
+          </h3>
+        </Link>
+        {description && (
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+            {description}
+          </p>
+        )}
+        <p className="text-sm text-muted-foreground mb-1">
+          Love Economy Church
+        </p>
+        <div className="flex items-center gap-1 mb-1"></div>
+        <div className="flex items-center gap-2 mt-2">
+          <span className="font-bold">{formatPrice(price ?? 0)}</span>
         </div>
-
-        <h3 className="mb-2 line-clamp-2 text-lg font-semibold text-slate-800 group-hover:text-sky-600">
-          {course.title}
-        </h3>
-
-        <p className="mb-4 line-clamp-2 flex-1 text-sm text-slate-600">{course.description}</p>
-
-        <div className="mt-auto flex items-center justify-between text-sm text-slate-500">
-          <div className="flex items-center gap-1">
-            <Clock size={14} />
-            <span>{course.duration}</span>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <BookOpen size={14} />
-            <span>{course.lessonsCount} lessons</span>
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3">
-          <div className="text-sm font-medium text-slate-700">{course.instructor}</div>
-
-          <div className="ml-auto flex items-center gap-1 text-sm font-medium text-sky-600">
-            <PlayCircle size={16} />
-            <span>Start Learning</span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  )
+      </CardContent>
+    </Card>
+  );
 }
-

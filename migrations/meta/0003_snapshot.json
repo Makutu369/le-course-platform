@@ -1,6 +1,6 @@
 {
-  "id": "8903aa77-b478-4323-a9e2-e94f81e01c9c",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e9f1ef14-6c19-4248-b568-aab551a80715",
+  "prevId": "1a520eec-a2c7-4b37-b750-bc58c9b8fac9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -104,6 +104,12 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "video_url": {
+          "name": "video_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},

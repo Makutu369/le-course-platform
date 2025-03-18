@@ -1,6 +1,6 @@
 {
-  "id": "03c37a12-c079-4e58-8832-7632795666f2",
-  "prevId": "38f43f7c-6e36-441b-aecc-89423a799905",
+  "id": "1a520eec-a2c7-4b37-b750-bc58c9b8fac9",
+  "prevId": "03c37a12-c079-4e58-8832-7632795666f2",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -84,6 +84,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",

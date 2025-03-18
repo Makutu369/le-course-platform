@@ -2,22 +2,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GoogleIcon from "./google-icon";
+import { useActionState, useEffect } from "react";
+import { ActionState } from "@/lib/middleware";
+import { signIn } from "@/app/(actions)/login";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface SignInFormProps {
   onToggleMode: () => void;
 }
 
 export function SignInForm({ onToggleMode }: SignInFormProps) {
-  // const [signUpState, signUpFormAction, signUpPending] = useActionState<
-  //   FormData,
-  //   ActionState
-  // >(signUp, {});
-  // useEffect(() => {
-  //   if (!signUpPending && signUpState.error) {
-  //     toast.error(signUpState.error);
-  //   }
-  // }, [signUpPending, signUpState.error]);
+  const router = useRouter();
+  const [signInState, signInFormActions, signInPending] = useActionState<
+    ActionState,
+    FormData
+  >(signIn, {});
+  useEffect(() => {
+    if (!signInPending && signInState.error) {
+      toast.error(signInState.error);
+    }
+  }, [signInPending, signInState.error]);
 
+  useEffect(() => {
+    if (signInState.success) {
+      router.push("courses");
+    }
+  }, [signInState.success, router]);
   return (
     <div className="grid gap-4">
       <Button variant="secondary" className="relative">
@@ -37,17 +48,27 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" />
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="m@example.com"
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" />
+          <Input id="password" name="password" type="password" />
         </div>
-        <Button type="submit">Sign In</Button>
+        <Button type="submit" formAction={signInFormActions}>
+          Sign In
+        </Button>
       </form>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <button onClick={onToggleMode} className="underline hover:text-primary">
+        <button
+          formAction={onToggleMode}
+          className="underline hover:text-primary"
+        >
           Sign up
         </button>
       </div>
