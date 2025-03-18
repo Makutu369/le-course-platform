@@ -60,7 +60,7 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
           <Input id="password" name="password" type="password" />
         </div>
         <Button type="submit" formAction={signInFormActions}>
-          Sign In
+          {signInPending ? <p>loading ....</p> : <p>Sign In</p>}
         </Button>
       </form>
       <div className="text-center text-sm">
