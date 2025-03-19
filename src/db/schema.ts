@@ -8,6 +8,7 @@ import {
   foreignKey,
   primaryKey,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm/relations";
 
@@ -81,7 +82,9 @@ export const sections = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     courseId: uuid("course_id").notNull(),
+    sortOrder: integer("sort_order"),
     title: text().notNull(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
     updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
       .defaultNow()
       .notNull(),
@@ -132,7 +135,8 @@ export const userSections = pgTable(
     userId: uuid("user_id").notNull(),
     sectionId: uuid("section_id").notNull(),
     courseId: uuid("course_id").notNull(),
-    completedAt: timestamp("completed_at", { mode: "string" }),
+    completed: boolean().default(false),
+    sortOrder: integer("sort_order"),
   },
   (table) => [
     foreignKey({
@@ -156,7 +160,6 @@ export const userSections = pgTable(
     }),
   ]
 );
-//relations
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, {
@@ -223,5 +226,5 @@ export type NewCourse = typeof courses.$inferInsert;
 export type CourseSections = typeof sections.$inferSelect;
 export type NewCourseSections = typeof sections.$inferInsert;
 
-export type userCourseSections = typeof userSections.$inferInsert;
-export type userCourseSectionsSelect = typeof userSections.$inferInsert;
+export type userCourseSections = typeof userSections.$inferSelect;
+export type NewuserCourseSections = typeof userSections.$inferInsert;

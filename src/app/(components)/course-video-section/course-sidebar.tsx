@@ -1,18 +1,26 @@
 import { cn } from "@/lib/utils";
-import { CourseSections } from "@/db/schema";
+import { Lock } from "lucide-react";
 
 interface courseSidebarProps {
-  sections: CourseSections[];
+  course: course;
   courseId: string;
 }
-export async function CourseSidebar(props: courseSidebarProps) {
-  // const userSections = await getUsersCourseSections({
-  //   courseId: props.courseId,
-  // });
 
+type course = {
+  completed: boolean | null;
+  sectionId: string;
+  section: Section;
+}[];
+
+interface Section {
+  id: string;
+  title: string;
+  videoUrl: string;
+}
+export async function CourseSidebar(props: courseSidebarProps) {
   return (
-    <div className="w-[40%] bg-white shadow-sm rounded-xl overflow-hidden border border-slate-100 transition-all duration-300">
-      <div className="p-4 border-b border-slate-100 bg-slate-50">
+    <div className="lg:w-[40%] w-full b  overflow-hidden transition-all duration-300">
+      <div className="p-4 border-b ">
         <h3 className="font-semibold text-slate-800">Course Content</h3>
         <p className="text-sm text-slate-500">
           {/* {completedVideos.length} of {videos.length} completed */}
@@ -20,17 +28,18 @@ export async function CourseSidebar(props: courseSidebarProps) {
       </div>
 
       <div className="divide-y divide-slate-100">
-        {props.sections.map((section) => {
+        {props.course.map((sections) => {
           return (
             <div
-              key={section.id}
+              key={sections.sectionId}
               className={cn(
                 "p-3 flex items-start gap-3 transition-colors cursor-pointer"
               )}
             >
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm line-clamp-2 text-slate-700">
-                  {section.title}
+                <h4 className="font-medium text-sm text-muted-foreground line-clamp-2 ">
+                  {sections.completed && <Lock />}
+                  {sections.section.title}
                 </h4>
                 {/* <p className="text-xs text-slate-500">{section.}</p> */}
               </div>

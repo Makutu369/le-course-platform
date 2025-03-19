@@ -1,9 +1,17 @@
 "use server";
 import { db } from "@/db";
-import { courses, userCourses, userSections } from "@/db/schema";
+import {
+  courses,
+  NewCourseSections,
+  NewuserCourseSections,
+  sections,
+  userCourses,
+  userSections,
+} from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
+import { title } from "process";
 
 export async function getCourses() {
   return await db.select().from(courses);
@@ -12,8 +20,9 @@ export async function getCourses() {
 export async function getCourseSections({ courseId }: { courseId: string }) {
   const course = await db.query.courses.findFirst({
     where: (courses, { eq }) => eq(courses.id, courseId),
+    columns: { id: true, title: true },
     with: {
-      sections: true,
+      sections: { orderBy: (sections, { asc }) => asc(sections.sortOrder) },
     },
   });
 
@@ -41,6 +50,19 @@ export async function accessCourse(params: {
     .insert(userCourses)
     .values({ courseId: params.courseId, userId: session?.userId ?? "" });
 
+  const courseSections = await getCourseSections({ courseId: params.courseId });
+  if (courseSections?.sections.length) {
+    const value: NewuserCourseSections[] = courseSections?.sections!.map(
+      (section) => ({
+        userId: session?.userId ?? "",
+        courseId: params.courseId ?? "",
+        sectionId: section.id,
+        sortOrder: section.sortOrder,
+      })
+    );
+    await db.insert(userSections).values(value);
+  }
+
   redirect(`/courses/${params.courseId}`);
 }
 
@@ -53,7 +75,8 @@ export async function findUsersCourse(courseId: string) {
         eq(userCourses.courseId, courseId),
         eq(userCourses.userId, session?.userId ?? "")
       ),
-    with: {},
+    columns: { userId: false },
+    with: { course: { columns: { title: true, description: true, id: true } } },
   });
 
   return course;
@@ -71,8 +94,14 @@ export async function getUsersCourseSections({
         eq(userSections.courseId, courseId),
         eq(userSections.userId, session?.userId ?? "")
       ),
+    columns: { completed: true, sectionId: true },
+    orderBy: (userSections, { asc }) => asc(userSections.sortOrder),
+    with: {
+      section: {
+        columns: { title: true, videoUrl: true, id: true },
+      },
+    },
   });
-
   return userCourseSections;
 }
 
@@ -86,7 +115,7 @@ export async function upateUserCourseSections({
   const session = await getSession();
   await db
     .update(userSections)
-    .set({ completedAt: String(new Date()) })
+    .set({ completed: true })
     .where(
       and(
         eq(userSections.courseId, courseId),
@@ -96,4 +125,19 @@ export async function upateUserCourseSections({
     );
 
   return true;
+}
+
+export async function getUser(userId: string) {
+  const user = await db.query.users.findFirst({
+    where: (user, { eq }) => eq(user.id, userId),
+  });
+  return user;
+}
+
+export async function filterSections(courseId: string) {
+  const userSections = await getUsersCourseSections({ courseId });
+  const incompleteSections = userSections.filter(
+    (section) => !section.completed
+  );
+  return incompleteSections.length > 0 ? incompleteSections[0].section : null;
 }

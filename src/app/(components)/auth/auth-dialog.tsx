@@ -12,25 +12,17 @@ import {
 } from "@/components/ui/dialog";
 import { SignInForm } from "./sign-in-form";
 import { SignUpForm } from "./sign-up-form";
-import { useAuthStore } from "@/store/authStore";
 
 export default function AuthDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const { user, logout } = useAuthStore()
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {user?.firstName && user.firstName !== "" ? (  <div className="flex items-center gap-4">
-          <span>Welcome, {user!.firstName}!</span>
-          <Button
-            onClick={logout}
-            className="bg-red-500 text-white px-3 py-1 rounded"
-          >
-            Logout
-          </Button>
-        </div>):(<Button>Sign In</Button>)}
+        <Button className="" variant="ghost">
+          Sign In
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -1,1 +1,0 @@
-ALTER TABLE "sections" ADD COLUMN "completed_at" timestamp;

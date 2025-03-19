@@ -1,6 +1,6 @@
 {
-  "id": "1a520eec-a2c7-4b37-b750-bc58c9b8fac9",
-  "prevId": "03c37a12-c079-4e58-8832-7632795666f2",
+  "id": "87a115c8-a156-4904-9f8f-03a3e0062616",
+  "prevId": "1a520eec-a2c7-4b37-b750-bc58c9b8fac9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -79,17 +79,17 @@
           "primaryKey": false,
           "notNull": true
         },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "title": {
           "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "completed_at": {
-          "name": "completed_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",

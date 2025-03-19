@@ -1,8 +1,12 @@
 "use server";
 import { db } from "@/db";
-import { getCourseSections } from "@/lib/queries/queries";
+import {
+  filterSections,
+  findUsersCourse,
+  getUsersCourseSections,
+} from "@/lib/queries/queries";
 import { CourseSidebar } from "@/app/(components)/course-video-section/course-sidebar";
-import { VideoPlayer } from "@/app/(components)/course-video-section/video-player";
+import VideoPlayer from "@/app/(components)/course-video-section/video-player";
 
 export async function generateStaticParams() {
   const courses = await db.query.courses.findMany();
@@ -12,16 +16,19 @@ export async function generateStaticParams() {
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id: courseId } = await params;
-  const course = await getCourseSections({
-    courseId,
-  });
+
+  const [usersCourse, currentSection, usersCourseSections] = await Promise.all([
+    findUsersCourse(courseId),
+    filterSections(courseId),
+    getUsersCourseSections({ courseId }),
+  ]);
 
   return (
-    <div className="w-full h-screen px-9 flex">
-      <div></div>
-      <div className="h-[60%] flex w-full gap-x-3">
-        <VideoPlayer videoUrl={course?.sections[0].videoUrl ?? ""} />
-        <CourseSidebar sections={course?.sections ?? []} courseId={courseId} />
+    <div className="w-full h-screen flex flex-col lg:px-9 py-9 ">
+      <div className="text-3xl py-3">{usersCourse?.course.title}</div>
+      <div className="lg:h-[80%] flex w-full flex-col lg:flex-row">
+        {currentSection && <VideoPlayer currentSection={currentSection} />}
+        <CourseSidebar course={usersCourseSections} courseId={courseId} />
       </div>
     </div>
   );
