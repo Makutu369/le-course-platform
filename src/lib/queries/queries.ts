@@ -2,16 +2,13 @@
 import { db } from "@/db";
 import {
   courses,
-  NewCourseSections,
   NewuserCourseSections,
-  sections,
   userCourses,
   userSections,
 } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
-import { title } from "process";
 
 export async function getCourses() {
   return await db.select().from(courses);
