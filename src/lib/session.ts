@@ -36,12 +36,15 @@ export async function setSession(user: User) {
 
   console.log("Device Info:", deviceInfo);
   try {
-    const result = await db.insert(sessions).values({
-      userId: user.id,
-      token,
-      ...deviceInfo,
-      expiresAt: expiresInOneDay,
-    }).returning();
+    const result = await db
+      .insert(sessions)
+      .values({
+        userId: user.id,
+        token,
+        ...deviceInfo,
+        expiresAt: expiresInOneDay,
+      })
+      .returning();
 
     console.log("Session insert result:", result); // Log DB insert result
 
@@ -86,33 +89,33 @@ export async function getSession() {
   return session;
 }
 
-export async function terminateSession(sessionId: string) {
+export async function terminateSession() {
   const { db } = await import("@/db");
   const currentUser = await getSession();
-  
-  if (!currentUser?.userId) {
-    console.error("Unauthorized: No user session found.");
-    throw new Error("Unauthorized");
-  }
 
-  console.log("Attempting to terminate session:", sessionId);
-  console.log("Current user ID:", currentUser.userId);
+  if (!currentUser?.userId) {
+    return { error: "No session found." };
+  }
 
   const result = await db
     .delete(sessions)
     .where(
-      and(eq(sessions.id, sessionId), eq(sessions.userId, currentUser.userId))
+      and(
+        eq(sessions.id, currentUser.id),
+        eq(sessions.userId, currentUser.userId)
+      )
     )
     .returning();
 
   console.log("Deletion result:", result);
 
   if (result.length === 0) {
-    console.warn("Session not found or already terminated.");
-    throw new Error("Session not found or already terminated.");
+    return { error: "Session not found or already terminated." };
   }
 
-  return true;
+  (await cookies()).delete("session");
+
+  return { state: result };
 }
 
 export async function hashPassword(password: string) {
