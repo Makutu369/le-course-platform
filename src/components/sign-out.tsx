@@ -1,16 +1,14 @@
-// "use client";
-// import React, { useActionState } from "react";
-// import { Button } from "./ui/button";
-// import { terminateSession } from "@/lib/session";
+import { terminateSession } from "@/lib/session";
 
-// const SignOut = (props: { sessionId: string }) => {
-//   const [state, terminate, pending] = useActionState(terminateSession, {error: "", state: props.sessionId });
+const SignOut = () => {
+  return (
+    <div
+      onClick={terminateSession}
+      className="px-2 py-2 mt-1 text-sm bg-destructive text-destructive-foreground rounded-md hover:cursor-pointer "
+    >
+      Sign out
+    </div>
+  );
+};
 
-//   return (
-//     <form action="">
-//       <Button formAction={terminate}>Sign out</Button>
-//     </form>
-//   );
-// };
-
-// export default SignOut;
+export default SignOut;

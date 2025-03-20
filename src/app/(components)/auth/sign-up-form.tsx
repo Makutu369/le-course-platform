@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ActionState } from "@/lib/middleware";
+import { Loader2 } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -22,11 +23,8 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   useEffect(() => {
     if (!pending && state.error) {
       toast.error(state.error);
-    } else if (!pending && state.data) {
-      toast.success("Account created successfully.");
-      console.log("Account created successfully.", state.data);
     }
-  }, [pending, state.error, state.data]);
+  }, [pending, state.error]);
 
   return (
     <div className="grid gap-4">
@@ -88,7 +86,11 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
         </div>
 
         <Button type="submit" formAction={action} className="mt-3 w-full">
-          Create Account
+          {pending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <div>Create Account</div>
+          )}
         </Button>
       </form>
       <div className="text-center text-sm">

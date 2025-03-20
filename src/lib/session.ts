@@ -1,3 +1,4 @@
+"use server";
 import { sessions, User } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import { cookies, headers } from "next/headers";
@@ -91,18 +92,18 @@ export async function getSession() {
 
 export async function terminateSession() {
   const { db } = await import("@/db");
-  const currentUser = await getSession();
+  const usersSession = await getSession();
 
-  if (!currentUser?.userId) {
-    return { error: "No session found." };
+  if (!usersSession?.userId) {
+    throw new Error("session not found");
   }
 
   const result = await db
     .delete(sessions)
     .where(
       and(
-        eq(sessions.id, currentUser.id),
-        eq(sessions.userId, currentUser.userId)
+        eq(sessions.id, usersSession.id),
+        eq(sessions.userId, usersSession.userId)
       )
     )
     .returning();
@@ -110,12 +111,10 @@ export async function terminateSession() {
   console.log("Deletion result:", result);
 
   if (result.length === 0) {
-    return { error: "Session not found or already terminated." };
+    throw new Error("session not found");
   }
 
   (await cookies()).delete("session");
-
-  return { state: result };
 }
 
 export async function hashPassword(password: string) {

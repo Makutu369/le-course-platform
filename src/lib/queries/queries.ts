@@ -9,6 +9,7 @@ import {
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
+import { revalidatePath } from "next/cache";
 
 export async function getCourses() {
   return await db.select().from(courses);
@@ -26,14 +27,23 @@ export async function getCourseSections({ courseId }: { courseId: string }) {
   return course;
 }
 
-export async function updateCourseCompleted(courseId: string, userId: string) {
-  return await db
-    .update(userCourses)
-    .set({ completed: true })
-    .where(
-      and(eq(userCourses.userId, userId), eq(userCourses.courseId, courseId))
-    )
-    .returning();
+export async function updateCourseCompleted(props: { courseId: string }) {
+  const session = await getSession();
+  try {
+    await db
+      .update(userCourses)
+      .set({ completed: true })
+      .where(
+        and(
+          eq(userCourses.userId, session?.userId ?? ""),
+          eq(userCourses.courseId, props.courseId)
+        )
+      );
+  } catch (error) {
+    return { error: "" };
+  }
+
+  revalidatePath(`/courses/${props.courseId}`);
 }
 
 export async function accessCourse(params: {
@@ -127,6 +137,11 @@ export async function upateUserCourseSections({
 export async function getUser(userId: string) {
   const user = await db.query.users.findFirst({
     where: (user, { eq }) => eq(user.id, userId),
+    columns: {
+      firstName: true,
+      lastName: true,
+      profilePicture: true,
+    },
   });
   return user;
 }
