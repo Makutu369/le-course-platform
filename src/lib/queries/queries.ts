@@ -40,7 +40,7 @@ export async function updateCourseCompleted(props: { courseId: string }) {
         )
       );
   } catch (error) {
-    return { error: "" };
+    return { error };
   }
 
   revalidatePath(`/courses/${props.courseId}`);
