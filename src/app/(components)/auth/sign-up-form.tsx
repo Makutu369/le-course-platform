@@ -85,12 +85,9 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
           <Input id="confirmPassword" name="confirmPassword" type="password" />
         </div>
 
-        <Button type="submit" formAction={action} className="mt-3 w-full">
-          {pending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <div>Create Account</div>
-          )}
+        <Button type="submit" formAction={action} className="mt-3 w-full ">
+          {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <div>Create Account</div>
         </Button>
       </form>
       <div className="text-center text-sm">

@@ -68,11 +68,8 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
             />
           </div>
           <Button type="submit" formAction={signInFormActions}>
-            {signInPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <p>Sign In</p>
-            )}
+            {signInPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <p>Sign In</p>
           </Button>
         </div>
       </form>

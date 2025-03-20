@@ -29,6 +29,9 @@ export async function getCourseSections({ courseId }: { courseId: string }) {
 
 export async function updateCourseCompleted(props: { courseId: string }) {
   const session = await getSession();
+  if (!session) {
+    return { error: " users session was notfound" };
+  }
   try {
     await db
       .update(userSections)

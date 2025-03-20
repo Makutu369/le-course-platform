@@ -442,7 +442,7 @@ export default function HLSVideoPlayer({
     <>
       <div
         ref={containerRef}
-        className={`relative w-full h-auto  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 ${
+        className={`relative w-full h-auto  focus:outline-none ${
           isFullscreen ? "bg-black" : ""
         }`}
       >
