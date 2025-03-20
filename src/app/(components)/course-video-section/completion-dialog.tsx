@@ -17,16 +17,19 @@ interface CompletionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   courseId?: string;
+  sectionId?: string;
 }
 
 export function CompletionDialog({
   open,
   onOpenChange,
   courseId,
+  sectionId,
 }: CompletionDialogProps) {
   const router = useRouter();
   const updateUserSectionCompleted = updateCourseCompleted.bind(null, {
     courseId: courseId ?? "",
+    sectionId: sectionId ?? "",
   });
 
   const [state, formAction, pending] = useActionState(

@@ -5,18 +5,22 @@ import Link from "next/link";
 import AuthDialog from "../app/(components)/auth/auth-dialog";
 import { getSession } from "@/lib/session";
 import UserCard from "./ui/user-card";
+import { cn } from "@/lib/utils";
 
 async function Header() {
   const session = await getSession();
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full tracking-tight mx-auto px-6 sm:px-9 lg:px-12 flex h-16 items-center justify-between">
+    <header
+      className={cn(
+        " w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        { "sticky top-0 z-50": !session?.id }
+      )}
+    >
+      <div className="w-full tracking-tight mx-auto px-3 sm:px-9 lg:px-12 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo-black.png" alt="" width={150} height={50} />
         </Link>
-
         <div className="flex items-center gap-x-14">
-          {" "}
           <div className="hidden gap-6 md:flex">
             <Link
               href="/courses"

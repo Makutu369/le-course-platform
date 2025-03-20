@@ -442,7 +442,7 @@ export default function HLSVideoPlayer({
     <>
       <div
         ref={containerRef}
-        className={`relative w-full h-auto  focus:outline-none ${
+        className={`relative lg:w-[70%] overflow-hidden border border-border  h-auto focus:outline-none ${
           isFullscreen ? "bg-black" : ""
         }`}
       >
@@ -535,6 +535,7 @@ export default function HLSVideoPlayer({
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
         courseId={courseId}
+        sectionId={section.id}
       />
     </>
   );

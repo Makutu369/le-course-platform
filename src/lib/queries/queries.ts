@@ -27,7 +27,10 @@ export async function getCourseSections({ courseId }: { courseId: string }) {
   return course;
 }
 
-export async function updateCourseCompleted(props: { courseId: string }) {
+export async function updateCourseCompleted(props: {
+  courseId: string;
+  sectionId: string;
+}) {
   const session = await getSession();
   if (!session) {
     return { error: " users session was notfound" };
@@ -39,7 +42,8 @@ export async function updateCourseCompleted(props: { courseId: string }) {
       .where(
         and(
           eq(userSections.userId, session?.userId ?? ""),
-          eq(userSections.courseId, props.courseId)
+          eq(userSections.courseId, props.courseId),
+          eq(userSections.sectionId, props.sectionId)
         )
       );
   } catch (error) {
