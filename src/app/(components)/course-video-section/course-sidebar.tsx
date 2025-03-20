@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Lock } from "lucide-react";
+import { Lock, Play } from "lucide-react";
 
 interface courseSidebarProps {
   course: course;
+  currentSectionId?: string;
   courseId: string;
 }
 
@@ -29,6 +30,7 @@ export async function CourseSidebar(props: courseSidebarProps) {
 
       <div className="divide-y divide-slate-100">
         {props.course.map((sections) => {
+          const currentSection = sections.sectionId === props.currentSectionId;
           return (
             <div
               key={sections.sectionId}
@@ -37,8 +39,11 @@ export async function CourseSidebar(props: courseSidebarProps) {
               )}
             >
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm text-muted-foreground line-clamp-2 ">
-                  {sections.completed && <Lock />}
+                <h4 className="font-medium gap-x-3 flex items-center text-sm text-muted-foreground line-clamp-2 ">
+                  {sections.completed && !currentSection && (
+                    <Lock className="bg-destructive" />
+                  )}
+                  {currentSection && <Play />}
                   {sections.section.title}
                 </h4>
                 {/* <p className="text-xs text-slate-500">{section.}</p> */}

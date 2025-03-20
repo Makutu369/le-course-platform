@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useActionState, useEffect } from "react";
 import { CheckCircle, Loader2 } from "lucide-react";
 import {
   Dialog,
@@ -24,40 +24,24 @@ export function CompletionDialog({
   onOpenChange,
   courseId,
 }: CompletionDialogProps) {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
-  const handleUpdateProgress = async () => {
-    try {
-      setIsUpdating(true);
-      setError(null);
-      if (courseId) {
-        await updateCourseCompleted({ courseId });
-      }
-      setIsUpdated(true);
-    } catch (err) {
-      console.error("Failed to update progress:", err);
-      setError("Failed to update progress. Please try again.");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
+  const updateUserSectionCompleted = updateCourseCompleted.bind(null, {
+    courseId: courseId ?? "",
+  });
+
+  const [state, formAction, pending] = useActionState(
+    updateUserSectionCompleted,
+    { data: false }
+  );
 
   useEffect(() => {
-    if (isUpdated) {
+    if (state.data) {
       router.refresh();
     }
-  }, [isUpdated, router]);
+  }, [state?.data, router]);
 
   const handleClose = () => {
     onOpenChange(false);
-    // Reset state when dialog closes
-    setTimeout(() => {
-      setIsUpdated(false);
-      setError(null);
-    }, 300);
   };
 
   return (
@@ -66,12 +50,13 @@ export function CompletionDialog({
         <DialogHeader>
           <DialogTitle>Video Completed</DialogTitle>
           <DialogDescription>
-            Youve completed watching this video. Would you like to
+            Youve completed watching this video. Would you like to mark it as
+            completed?
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex items-center justify-center py-4">
-          {isUpdated && (
+          {state.data && (
             <div className="flex flex-col items-center gap-2 text-center">
               <CheckCircle className="h-12 w-12 text-green-500" />
               <p className="text-sm text-muted-foreground">
@@ -79,8 +64,10 @@ export function CompletionDialog({
               </p>
             </div>
           )}{" "}
-          {error && (
-            <div className="text-center text-destructive text-sm">{error}</div>
+          {state.error && (
+            <div className="text-center text-destructive text-sm">
+              {state.error}
+            </div>
           )}
           <div className="text-center text-sm text-muted-foreground">
             <p>
@@ -93,13 +80,9 @@ export function CompletionDialog({
           <Button variant="outline" onClick={handleClose}>
             Close
           </Button>
-
-          {!isUpdated && (
-            <Button
-              onClick={handleUpdateProgress}
-              disabled={isUpdating || isUpdated}
-            >
-              {isUpdating ? (
+          <form action={formAction}>
+            <Button disabled={pending}>
+              {pending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Updating...
@@ -108,7 +91,7 @@ export function CompletionDialog({
                 "Update Progress"
               )}
             </Button>
-          )}
+          </form>
         </DialogFooter>
       </DialogContent>
     </Dialog>

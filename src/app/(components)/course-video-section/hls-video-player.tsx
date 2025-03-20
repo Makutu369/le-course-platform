@@ -16,8 +16,11 @@ import { Slider } from "@/components/ui/slider";
 import { CompletionDialog } from "./completion-dialog";
 
 interface HLSVideoPlayerProps {
-  src: string;
-  poster?: string;
+  section: {
+    id: string;
+    title: string;
+    videoUrl: string;
+  };
   muted?: boolean;
   backwardSeekSeconds?: number;
   onComplete?: () => void;
@@ -26,8 +29,7 @@ interface HLSVideoPlayerProps {
 }
 
 export default function HLSVideoPlayer({
-  src,
-  poster = "",
+  section,
   muted = false,
   backwardSeekSeconds = 10,
   onComplete,
@@ -48,7 +50,7 @@ export default function HLSVideoPlayer({
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const lastAllowedTimeRef = useRef(0);
 
-  const storageKey = `hls-player-progress-${hashString(src)}`;
+  const storageKey = `hls-player-progress-${hashString(section.id)}`;
 
   function hashString(str: string): string {
     let hash = 0;
@@ -133,7 +135,7 @@ export default function HLSVideoPlayer({
 
       if (video.canPlayType("application/vnd.apple.mpegurl")) {
         // Native HLS support (Safari)
-        video.src = src;
+        video.src = section.videoUrl;
       } else if (Hls.isSupported()) {
         // Use hls.js for other browsers
         hls = new Hls({
@@ -141,7 +143,7 @@ export default function HLSVideoPlayer({
           lowLatencyMode: true,
         });
 
-        hls.loadSource(src);
+        hls.loadSource(section.videoUrl);
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -260,7 +262,7 @@ export default function HLSVideoPlayer({
       }
     };
   }, [
-    src,
+    section.videoUrl,
     onComplete,
     saveProgress,
     storageKey,
@@ -462,7 +464,6 @@ export default function HLSVideoPlayer({
         <video
           ref={videoRef}
           className="w-full h-auto  cursor-pointer"
-          poster={poster}
           muted={muted}
           playsInline
           onClick={handleVideoClick}

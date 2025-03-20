@@ -5,6 +5,7 @@ import { cookies, headers } from "next/headers";
 import { UAParser } from "ua-parser-js";
 import { SessionData, signToken, verifyToken } from "./jwt";
 import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export async function setSession(user: User) {
   const { db } = await import("@/db");
@@ -115,6 +116,8 @@ export async function terminateSession() {
   }
 
   (await cookies()).delete("session");
+
+  redirect("/");
 }
 
 export async function hashPassword(password: string) {

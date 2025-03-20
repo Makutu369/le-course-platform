@@ -31,19 +31,21 @@ export async function updateCourseCompleted(props: { courseId: string }) {
   const session = await getSession();
   try {
     await db
-      .update(userCourses)
+      .update(userSections)
       .set({ completed: true })
       .where(
         and(
-          eq(userCourses.userId, session?.userId ?? ""),
-          eq(userCourses.courseId, props.courseId)
+          eq(userSections.userId, session?.userId ?? ""),
+          eq(userSections.courseId, props.courseId)
         )
       );
   } catch (error) {
-    return { error };
+    console.log(error);
+    return { error: "Something went wrong" };
   }
 
   revalidatePath(`/courses/${props.courseId}`);
+  return { data: true };
 }
 
 export async function accessCourse(params: {
