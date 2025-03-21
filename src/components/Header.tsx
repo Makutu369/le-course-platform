@@ -16,7 +16,7 @@ async function Header() {
         { "sticky top-0 z-50": !session?.id }
       )}
     >
-      <div className="w-full tracking-tight mx-auto px-3 sm:px-9 lg:px-12 flex h-16 items-center justify-between">
+      <div className="w-full tracking-tight mx-auto px-2 sm:px-6 lg:px-12 xl:px-16  flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo-black.png" alt="" width={150} height={50} />
         </Link>
