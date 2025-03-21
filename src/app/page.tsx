@@ -38,16 +38,11 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
-                  <Button size="lg" className="w-full sm:w-auto">
-                    Browse Courses
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="w-full sm:w-auto"
-                  >
-                    Learn More
-                  </Button>
+                  <Link href={"/courses"}>
+                    <Button size="lg" className="w-full sm:w-auto">
+                      Browse Courses
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

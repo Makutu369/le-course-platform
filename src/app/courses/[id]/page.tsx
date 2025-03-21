@@ -6,7 +6,7 @@ import {
   getUsersCourseSections,
 } from "@/lib/queries/queries";
 import { CourseSidebar } from "@/app/(components)/course-video-section/course-sidebar";
-import VideoPlayer from "@/app/(components)/course-video-section/video-player";
+import HLSVideoPlayer from "@/app/(components)/course-video-section/hls-video-player";
 
 export async function generateStaticParams() {
   const courses = await db.query.courses.findMany();
@@ -24,11 +24,19 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   ]);
 
   return (
-    <div className="w-full h-screen flex flex-col lg:px-9 py-9 ">
-      <div className="text-3xl py-3">{usersCourse?.course.title}</div>
-      <div className="lg:h-[80%] flex w-full flex-col lg:flex-row">
-        {currentSection && <VideoPlayer currentSection={currentSection} />}
-        <CourseSidebar course={usersCourseSections} courseId={courseId} />
+    <div className="w-full h-[calc(100vh-64px)]  flex flex-col py-3 ">
+      <div className="lg:text-3xl text-xl md:text-2xl lg:text-start text-center lg:px-9 px-3 py-3">
+        {usersCourse?.course.title}
+      </div>
+      <div className="lg:h-[90%] flex w-full flex-col lg:flex-row">
+        {currentSection && (
+          <HLSVideoPlayer section={currentSection} courseId={courseId} />
+        )}
+        <CourseSidebar
+          course={usersCourseSections}
+          courseId={courseId}
+          currentSectionId={currentSection?.id}
+        />
       </div>
     </div>
   );

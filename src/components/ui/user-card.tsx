@@ -1,3 +1,4 @@
+"use server";
 import React from "react";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarFallback, AvatarImage } from "./avatar";
@@ -10,6 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "./dropdown-menu";
+import SignOut from "../sign-out";
 
 async function UserCard(props: { userId: string; sessionId: string }) {
   const user = await getUser(props.userId);
@@ -32,7 +34,7 @@ async function UserCard(props: { userId: string; sessionId: string }) {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Settings</DropdownMenuItem>
-          {/* <SignOut sessionId={props.sessionId} /> */}
+          <SignOut />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
