@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-
-async function getSession() {
-  const session = (await cookies()).get("session")?.value;
-  if (!session) return null;
-  return session;
-}
+import { verifyToken } from "./lib/jwt";
 
 export default async function middleware(req: NextRequest) {
-  const session = await getSession();
-
-  if (!session) {
+  const cookieValue = req.cookies.get("session")?.value;
+  const session = await verifyToken(cookieValue ?? "");
+  if (!cookieValue || !session.user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
