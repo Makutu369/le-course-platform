@@ -2,6 +2,7 @@ import { signUp } from "@/app/(actions)/login";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import { ActionState } from "@/lib/middleware";
 import { Loader2 } from "lucide-react";
 import { useActionState, useEffect } from "react";
@@ -78,11 +79,11 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
         </div>
         <div className="grid gap-2 my-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" name="password" type="password" />
+          <PasswordInput id="password" name="password" />
         </div>
         <div className="grid gap-2 my-2">
           <Label htmlFor="password">Confirm password</Label>
-          <Input id="confirmPassword" name="confirmPassword" type="password" />
+          <PasswordInput id="confirmPassword" name="confirmPassword" />
         </div>
 
         <Button type="submit" formAction={action} className="mt-3 w-full ">
