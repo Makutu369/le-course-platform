@@ -15,7 +15,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative w-full min-h-[80vh]">
+        <section className="relative w-full h-[50vh] md:min-h-[65vh] lg:min-h-[80vh]">
           <div className="absolute inset-0">
             <Image
               src="/wtgf.jpg"
@@ -25,7 +25,7 @@ export default function Home() {
               priority
             />
           </div>
-          <div className="relative z-10 flex min-h-[80vh] items-center text-white">
+          <div className="relative z-10 flex h-[50vh] md:min-h-[65vh] lg:min-h-[80vh]  items-center text-white">
             <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="space-y-2">
@@ -40,7 +40,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
                   <Link href={"/courses"}>
                     <Button size="lg" className="w-full sm:w-auto">
-                      Browse Courses
+                      Start Now
                     </Button>
                   </Link>
                 </div>

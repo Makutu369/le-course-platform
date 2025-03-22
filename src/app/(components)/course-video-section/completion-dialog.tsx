@@ -47,7 +47,7 @@ export function CompletionDialog({
       router.refresh();
       handleClose();
     }
-  }, [state?.data, router]);
+  }, [state?.data, router, handleClose]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
