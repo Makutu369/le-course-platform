@@ -8,6 +8,7 @@ import { signIn } from "@/app/(actions)/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 interface SignInFormProps {
   onToggleMode: () => void;
@@ -60,11 +61,10 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input
+            <PasswordInput
               id="password"
               name="password"
               defaultValue={signInState.data?.password}
-              type="password"
             />
           </div>
           <Button type="submit" formAction={signInFormActions}>
