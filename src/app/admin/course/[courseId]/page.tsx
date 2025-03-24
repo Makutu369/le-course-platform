@@ -5,10 +5,14 @@ import { CheckCircle, XCircle, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 
-const CourseUsersPage = async ({ params }: { params: { courseId: string } }) => {
-  const { courseId } = params
+const CourseUsersPage = async ({ params }: { params: { courseId?: string } }) => {
+  const { courseId } = await params; // Ensure `params` is awaited
 
-  const enrolledUsersWithProgress = await getAllUsersProgressInCourse(courseId)
+  if (!courseId) {
+    return <div>Error: Course ID is missing.</div>;
+  }
+
+  const enrolledUsersWithProgress = await getAllUsersProgressInCourse(courseId);
 
   return (
     <div className="w-full bg-white py-8 space-y-6">
@@ -40,7 +44,6 @@ const CourseUsersPage = async ({ params }: { params: { courseId: string } }) => 
                 <table className="w-full">
                   <thead>
                     <tr className="bg-muted/50">
-                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">User ID</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Name</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Email</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Progress</th>
@@ -49,10 +52,9 @@ const CourseUsersPage = async ({ params }: { params: { courseId: string } }) => 
                   </thead>
                   <tbody className="divide-y">
                     {enrolledUsersWithProgress.map((user) => {
-                      const progressValue = user.progress || 0
+                      const progressValue = user.progress || 0;
                       return (
                         <tr key={user.userId} className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 py-3 text-sm">{user.userId}</td>
                           <td className="px-4 py-3 text-sm font-medium">
                             {user.firstName} {user.lastName}
                           </td>
@@ -93,7 +95,7 @@ const CourseUsersPage = async ({ params }: { params: { courseId: string } }) => 
                             )}
                           </td>
                         </tr>
-                      )
+                      );
                     })}
                   </tbody>
                 </table>
@@ -103,8 +105,7 @@ const CourseUsersPage = async ({ params }: { params: { courseId: string } }) => 
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default CourseUsersPage
-
+export default CourseUsersPage;

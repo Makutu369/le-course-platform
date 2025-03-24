@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 const key = new TextEncoder().encode(process.env.AUTH_SECRET);
 
 export type SessionData = {
-  user: { id: string; role: string };
+  user: { id: string; role: string; email: string };
   expires: string;
 };
 

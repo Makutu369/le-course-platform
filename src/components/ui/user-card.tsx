@@ -13,10 +13,11 @@ import {
 } from "./dropdown-menu";
 import SignOut from "../sign-out";
 import Link from "next/link";
+import { ADMIN_EMAILS } from "@/lib/utils";
 
 async function UserCard(props: { userId: string; sessionId: string }) {
   const user = await getUser(props.userId);
-  const isAdmin = user?.email === "chelseakowouvi@gmail.com"; 
+  const isAdmin = ADMIN_EMAILS.includes(user?.email ?? "");
 
   return (
     <div>
