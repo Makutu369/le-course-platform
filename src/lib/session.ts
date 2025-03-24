@@ -11,7 +11,7 @@ export async function setSession(user: User) {
   const { db } = await import("@/db");
   const expiresInOneDay = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const session: SessionData = {
-    user: { id: user.id, role: user.role },
+    user: { id: user.id, role: user.role, email: user.email },
     expires: expiresInOneDay.toISOString(),
   };
   console.log("Setting session for user:", user); // Log the user object
