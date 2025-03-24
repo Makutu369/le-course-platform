@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 
 const CourseUsersPage = async ({ params }: { params: { courseId?: string } }) => {
-  const { courseId } = await params; // Ensure `params` is awaited
+  const { courseId } = await params;
 
   if (!courseId) {
     return <div>Error: Course ID is missing.</div>;

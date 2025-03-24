@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export const ADMIN_EMAILS = [
   "ojodavid115@gmail.com",
-  "chelseakowouvi@gmail.com"
+  "chelseakowouvi@gmail.com",
+  "amandananaamaa@gmail.com"
   
  
 ]
