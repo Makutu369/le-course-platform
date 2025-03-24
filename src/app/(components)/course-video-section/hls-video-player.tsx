@@ -136,6 +136,7 @@ export default function HLSVideoPlayer({
       if (video.canPlayType("application/vnd.apple.mpegurl")) {
         // Native HLS support (Safari)
         video.src = section.videoUrl;
+        video.load();
       } else if (Hls.isSupported()) {
         // Use hls.js for other browsers
         hls = new Hls({
