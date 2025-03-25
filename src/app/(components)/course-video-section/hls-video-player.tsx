@@ -44,13 +44,12 @@ export default function HLSVideoPlayer({
   const [isCompleted, setIsCompleted] = useState(false);
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const videoId = `${courseId || ""}${section?.id || ""}`;
-  const localStorageKey = `-${section?.id}`;
+  const localStorageKey = `key-${section?.id}`;
 
   // Load saved progress from localStorage
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !saveProgress || !videoId) return;
+    if (!video) return;
 
     const handleLoadedMetadata = () => {
       const savedProgress = localStorage.getItem(localStorageKey);
@@ -68,14 +67,14 @@ export default function HLSVideoPlayer({
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [saveProgress, videoId, localStorageKey]);
+  }, [saveProgress, localStorageKey]);
 
   // Save progress to localStorage
   useEffect(() => {
-    if (saveProgress && videoId && currentTime > 0) {
+    if (saveProgress && currentTime > 0) {
       localStorage.setItem(localStorageKey, currentTime.toString());
     }
-  }, [currentTime, saveProgress, videoId, localStorageKey]);
+  }, [currentTime, saveProgress, localStorageKey]);
 
   // Handle video events
   useEffect(() => {
