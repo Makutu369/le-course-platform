@@ -74,7 +74,7 @@ export default function HLSVideoPlayer({
         player.duration > 0 &&
         (player.duration - current <= 2 || current >= player.duration)
       ) {
-        setIsCompleted(false);
+        setIsCompleted(true);
         onComplete();
       }
     };
