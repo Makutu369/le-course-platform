@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import ReactHlsPlayer from "react-hls-player";
 import {
   Play,
@@ -44,7 +44,7 @@ export default function HLSVideoPlayer({
   const [isCompleted, setIsCompleted] = useState(false);
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const localStorageKey = `key-${section?.id}`;
+  const localStorageKey = useMemo(() => `key-${section?.id}`, [section?.id]);
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -52,6 +52,7 @@ export default function HLSVideoPlayer({
     if (!video) return;
 
     const handleLoadedMetadata = () => {
+      if (!section?.id) return;
       const savedProgress = localStorage.getItem(localStorageKey);
       if (savedProgress) {
         const progress = Number.parseFloat(savedProgress);
@@ -67,7 +68,7 @@ export default function HLSVideoPlayer({
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [saveProgress, localStorageKey]);
+  }, [saveProgress, localStorageKey, section?.id]);
 
   // Save progress to localStorage
   useEffect(() => {
