@@ -31,7 +31,7 @@ export function CourseSidebar({
         <h3 className="font-semibold text-foreground text-lg">
           Course Content
         </h3>
-        <p className="text-sm text-muted-foreground mt-1 flex items-center">
+        <div className="text-sm text-muted-foreground mt-1 flex items-center">
           <span className="font-medium">{completedSections}</span>
           <span className="mx-1">/</span>
           <span>{totalSections}</span>
@@ -48,7 +48,7 @@ export function CourseSidebar({
               }}
             />
           </div>
-        </p>
+        </div>
       </div>
 
       {course && course.length > 0 ? (
