@@ -17,8 +17,8 @@ import { useRouter } from "next/navigation";
 interface CompletionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  courseId?: string;
-  sectionId?: string;
+  courseId: string;
+  sectionId: string;
 }
 
 export function CompletionDialog({

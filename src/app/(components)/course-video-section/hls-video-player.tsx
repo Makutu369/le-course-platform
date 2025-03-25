@@ -41,11 +41,11 @@ export default function HLSVideoPlayer({
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPipActive, setIsPipActive] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(true);
+  const [isCompleted, setIsCompleted] = useState(false);
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
 
   const videoId = `${courseId || ""}${section?.id || ""}`;
-  const localStorageKey = `video-progress-${videoId}`;
+  const localStorageKey = `video-progress-${section?.id}`;
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -91,24 +91,19 @@ export default function HLSVideoPlayer({
     const video = videoRef.current;
     if (!video) return;
 
-    let hasCompletedTriggered = false; // Prevent duplicate calls
-
     const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime);
 
       // Check if video is about to complete (2s before the end)
-      if (!hasCompletedTriggered && video.duration - video.currentTime <= 2) {
+      if (video.duration - video.currentTime <= 2) {
         setIsCompleted(true);
-        hasCompletedTriggered = true;
         onComplete?.();
       }
     };
 
     const handleEnded = () => {
-      if (!hasCompletedTriggered) {
-        onComplete?.();
-        setIsCompleted(true);
-      }
+      onComplete?.();
+      setIsCompleted(true);
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
@@ -302,6 +297,8 @@ export default function HLSVideoPlayer({
           <CompletionDialog
             open={isCompleted}
             onOpenChange={() => setIsCompleted((prev) => !prev)}
+            courseId={courseId ?? ""}
+            sectionId={section?.id ?? ""}
           />
         </div>
       </div>

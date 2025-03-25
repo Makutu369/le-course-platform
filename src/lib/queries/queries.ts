@@ -166,57 +166,53 @@ export async function filterSections(courseId: string) {
   return incompleteSections.length > 0 ? incompleteSections[0].section : null;
 }
 
-
 export async function getUsersEnrolledInCourse(courseId: string) {
-    return await db
-      .select({
-        userId: users.id,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        email: users.email,
-        enrolledAt: userCourses.enrolledAt,
-        completed: userCourses.completed
-      })
-      .from(userCourses)
-      .innerJoin(users, eq(users.id, userCourses.userId)) 
-      .where(eq(userCourses.courseId, courseId)); 
-  }
-  export async function getAllUsersProgressInCourse(courseId: string) {
-   
-    const totalSections = await db
-      .select({ count: sql<number>`COUNT(*)` })
-      .from(sections)
-      .where(eq(sections.courseId, courseId))
-      .then((res) => res[0]?.count ?? 0);
-  
-    if (totalSections === 0) return [];
-  
-  
-    const usersProgress = await db
-      .select({
-        userId: users.id,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        email: users.email,
-        completedSections: sql<number>`COUNT(${userSections.sectionId})`,
-        completed: sql<boolean>`bool_or(${userCourses.completed})`, 
-      })
-      .from(users)
-      .innerJoin(userCourses, eq(users.id, userCourses.userId))
-      .leftJoin(userSections, and(
+  return await db
+    .select({
+      userId: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      enrolledAt: userCourses.enrolledAt,
+      completed: userCourses.completed,
+    })
+    .from(userCourses)
+    .innerJoin(users, eq(users.id, userCourses.userId))
+    .where(eq(userCourses.courseId, courseId));
+}
+export async function getAllUsersProgressInCourse(courseId: string) {
+  const totalSections = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(sections)
+    .where(eq(sections.courseId, courseId))
+    .then((res) => res[0]?.count ?? 0);
+
+  if (totalSections === 0) return [];
+
+  const usersProgress = await db
+    .select({
+      userId: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      completedSections: sql<number>`COUNT(${userSections.sectionId})`,
+      completed: sql<boolean>`bool_or(${userCourses.completed})`,
+    })
+    .from(users)
+    .innerJoin(userCourses, eq(users.id, userCourses.userId))
+    .leftJoin(
+      userSections,
+      and(
         eq(userSections.userId, users.id),
         eq(userSections.courseId, courseId),
         eq(userSections.completed, true)
-      ))
-      .where(eq(userCourses.courseId, courseId))
-      .groupBy(users.id);
-  
-    
-    return usersProgress.map((user) => ({
-      ...user,
-      progress: Math.round((user.completedSections / totalSections) * 100),
-    }));
-  }
-  
-  
-  
+      )
+    )
+    .where(eq(userCourses.courseId, courseId))
+    .groupBy(users.id);
+
+  return usersProgress.map((user) => ({
+    ...user,
+    progress: Math.round((user.completedSections / totalSections) * 100),
+  }));
+}
