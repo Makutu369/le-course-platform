@@ -26,7 +26,7 @@ export function CourseSidebar({
     course?.filter((section) => section.completed)?.length || 0;
 
   return (
-    <ScrollArea className="lg:w-[30%] h-auto relative border border-border shadow-sm overflow-hidden transition-all duration-300">
+    <ScrollArea className="lg:w-[30%] h-full relative border border-border shadow-sm overflow-hidden transition-all duration-300">
       <div className="p-6 border-b bg-muted sticky top-0 left-0">
         <h3 className="font-semibold text-foreground text-lg">
           Course Content
