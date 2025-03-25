@@ -70,12 +70,11 @@ export default function HLSVideoPlayer({
 
       // Check if video is near completion (within 2 seconds)
       if (
-        onComplete &&
         player.duration > 0 &&
         (player.duration - current <= 2 || current >= player.duration)
       ) {
         setIsCompleted(true);
-        onComplete();
+        onComplete?.();
       }
     };
 
