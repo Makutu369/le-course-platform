@@ -46,7 +46,7 @@ export function CompletionDialog({
     if (state.data) {
       handleClose();
     }
-  }, [state?.data, router, handleClose]);
+  }, [state?.data, router]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
