@@ -68,7 +68,7 @@ export default function HLSVideoPlayer({
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [saveProgress, localStorageKey, section?.id]);
+  }, [section?.id]);
 
   // Save progress to localStorage
   useEffect(() => {
