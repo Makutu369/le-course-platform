@@ -50,7 +50,7 @@ export default function HLSVideoPlayer({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
+    setCurrentTime(0);
     const handleLoadedMetadata = () => {
       if (!section?.id) return;
       const savedProgress = localStorage.getItem(localStorageKey);
