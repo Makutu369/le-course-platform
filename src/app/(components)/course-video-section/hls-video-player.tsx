@@ -179,7 +179,11 @@ export default function HLSVideoPlayer({
         playerRef={playerRef as React.RefObject<HTMLVideoElement>}
         muted={muted}
         className="w-full aspect-video"
-        onEnded={() => setIsCompleted(true)}
+        onEnded={() => {
+          if (!isCompleted) {
+            setIsCompleted(true);
+          }
+        }}
       />
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
         {/* Progress bar */}
