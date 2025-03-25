@@ -44,7 +44,6 @@ export function CompletionDialog({
 
   useEffect(() => {
     if (state.data) {
-      router.refresh();
       handleClose();
     }
   }, [state?.data, router, handleClose]);

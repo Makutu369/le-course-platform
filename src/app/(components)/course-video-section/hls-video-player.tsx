@@ -45,17 +45,29 @@ export default function HLSVideoPlayer({
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
 
   const videoId = `${courseId || ""}${section?.id || ""}`;
-  const localStorageKey = `video-progress-${section?.id}`;
+  const localStorageKey = `-${section?.id}`;
 
   // Load saved progress from localStorage
   useEffect(() => {
-    if (saveProgress && videoRef.current && videoId) {
+    const video = videoRef.current;
+    if (!video || !saveProgress || !videoId) return;
+
+    const handleLoadedMetadata = () => {
       const savedProgress = localStorage.getItem(localStorageKey);
       if (savedProgress) {
-        videoRef.current.currentTime = Number.parseFloat(savedProgress);
-        setCurrentTime(Number.parseFloat(savedProgress));
+        const progress = Number.parseFloat(savedProgress);
+        if (!isNaN(progress) && progress < video.duration) {
+          video.currentTime = progress;
+          setCurrentTime(progress);
+        }
       }
-    }
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
   }, [saveProgress, videoId, localStorageKey]);
 
   // Save progress to localStorage
