@@ -106,6 +106,14 @@ export async function getUsersCourseSections({
   courseId: string;
 }) {
   const session = await getSession();
+  const isEnrolled = await db.query.userCourses.findFirst({
+    where: (userCourses, { and, eq }) =>
+      and(
+        eq(userCourses.courseId, courseId),
+        eq(userCourses.userId, session?.userId ?? "")
+      ),
+  });
+  if (!isEnrolled) return;
   const userCourseSections = await db.query.userSections.findMany({
     where: (userSections, { and, eq }) =>
       and(
@@ -160,6 +168,7 @@ export async function getUser(userId: string) {
 
 export async function filterSections(courseId: string) {
   const userSections = await getUsersCourseSections({ courseId });
+  if (!userSections) redirect("/courses");
   const incompleteSections = userSections.filter(
     (section) => !section.completed
   );

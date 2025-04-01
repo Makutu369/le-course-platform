@@ -7,6 +7,7 @@ import {
 } from "@/lib/queries/queries";
 import { CourseSidebar } from "@/app/(components)/course-video-section/course-sidebar";
 import HLSVideoPlayer from "@/app/(components)/course-video-section/hls-video-player";
+import CourseCompletedPage from "../(components)/course-complete-card";
 
 export async function generateStaticParams() {
   const courses = await db.query.courses.findMany();
@@ -16,12 +17,13 @@ export async function generateStaticParams() {
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id: courseId } = await params;
-
   const [usersCourse, currentSection, usersCourseSections] = await Promise.all([
     findUsersCourse(courseId),
     filterSections(courseId),
     getUsersCourseSections({ courseId }),
   ]);
+  if (usersCourse && !currentSection && usersCourseSections)
+    return <CourseCompletedPage />;
 
   return (
     <div className="w-full h-[calc(100vh-64px)]  flex flex-col py-3 ">
@@ -32,6 +34,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
         {currentSection && (
           <HLSVideoPlayer section={currentSection} courseId={courseId} />
         )}
+
         <CourseSidebar
           course={usersCourseSections}
           courseId={courseId}
