@@ -10,6 +10,7 @@ export type Student = {
   email: string;
   completedSections: number;
   completed: boolean;
+  courseCompleted: boolean;
 };
 
 type UseStudentsProps = {
@@ -24,7 +25,9 @@ export function useStudents({ courseId }: UseStudentsProps) {
     const fetchStudents = async () => {
       setIsLoading(true);
       try {
-        const enrolledUsersWithProgress = await getAllUsersProgressInCourse(courseId);
+        const enrolledUsersWithProgress = await getAllUsersProgressInCourse(
+          courseId
+        );
         setStudents(enrolledUsersWithProgress);
       } catch (error) {
         console.error("Error fetching students:", error);
