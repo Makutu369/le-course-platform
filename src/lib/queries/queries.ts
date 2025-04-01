@@ -223,5 +223,6 @@ export async function getAllUsersProgressInCourse(courseId: string) {
   return usersProgress.map((user) => ({
     ...user,
     progress: Math.round((user.completedSections / totalSections) * 100),
+    courseCompleted: user.completedSections === totalSections,
   }));
 }
