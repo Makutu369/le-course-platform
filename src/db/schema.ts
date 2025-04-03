@@ -110,6 +110,7 @@ export const userCourses = pgTable(
     courseId: uuid("course_id").notNull(),
     enrolledAt: timestamp("enrolled_at", { mode: "string" }).defaultNow(),
     completed: boolean().default(false),
+    compeletedAt: timestamp("completed_at", { withTimezone: true }),
   },
   (table) => [
     foreignKey({

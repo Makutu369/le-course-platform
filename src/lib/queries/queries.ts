@@ -3,10 +3,12 @@ import { db } from "@/db";
 import {
   courses,
   NewuserCourseSections,
+  sections,
   userCourses,
+  users,
   userSections,
 } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
 import { revalidatePath } from "next/cache";
@@ -104,6 +106,14 @@ export async function getUsersCourseSections({
   courseId: string;
 }) {
   const session = await getSession();
+  const isEnrolled = await db.query.userCourses.findFirst({
+    where: (userCourses, { and, eq }) =>
+      and(
+        eq(userCourses.courseId, courseId),
+        eq(userCourses.userId, session?.userId ?? "")
+      ),
+  });
+  if (!isEnrolled) return;
   const userCourseSections = await db.query.userSections.findMany({
     where: (userSections, { and, eq }) =>
       and(
@@ -150,6 +160,7 @@ export async function getUser(userId: string) {
       firstName: true,
       lastName: true,
       profilePicture: true,
+      email: true,
     },
   });
   return user;
@@ -157,8 +168,60 @@ export async function getUser(userId: string) {
 
 export async function filterSections(courseId: string) {
   const userSections = await getUsersCourseSections({ courseId });
+  if (!userSections) redirect("/courses");
   const incompleteSections = userSections.filter(
     (section) => !section.completed
   );
   return incompleteSections.length > 0 ? incompleteSections[0].section : null;
+}
+
+export async function getUsersEnrolledInCourse(courseId: string) {
+  return await db
+    .select({
+      userId: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      enrolledAt: userCourses.enrolledAt,
+      completed: userCourses.completed,
+    })
+    .from(userCourses)
+    .innerJoin(users, eq(users.id, userCourses.userId))
+    .where(eq(userCourses.courseId, courseId));
+}
+export async function getAllUsersProgressInCourse(courseId: string) {
+  const totalSections = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(sections)
+    .where(eq(sections.courseId, courseId))
+    .then((res) => res[0]?.count ?? 0);
+
+  if (totalSections === 0) return [];
+
+  const usersProgress = await db
+    .select({
+      userId: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      completedSections: sql<number>`COUNT(${userSections.sectionId})`,
+      completed: sql<boolean>`bool_or(${userCourses.completed})`,
+    })
+    .from(users)
+    .innerJoin(userCourses, eq(users.id, userCourses.userId))
+    .leftJoin(
+      userSections,
+      and(
+        eq(userSections.userId, users.id),
+        eq(userSections.courseId, courseId),
+        eq(userSections.completed, true)
+      )
+    )
+    .where(eq(userCourses.courseId, courseId))
+    .groupBy(users.id);
+
+  return usersProgress.map((user) => ({
+    ...user,
+    progress: Math.round((user.completedSections / totalSections) * 100),
+  }));
 }

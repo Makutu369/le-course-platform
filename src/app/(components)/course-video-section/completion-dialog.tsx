@@ -17,8 +17,8 @@ import { useRouter } from "next/navigation";
 interface CompletionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  courseId?: string;
-  sectionId?: string;
+  courseId: string;
+  sectionId: string;
 }
 
 export function CompletionDialog({
@@ -44,10 +44,9 @@ export function CompletionDialog({
 
   useEffect(() => {
     if (state.data) {
-      router.refresh();
       handleClose();
     }
-  }, [state?.data, router, handleClose]);
+  }, [state?.data, router]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
