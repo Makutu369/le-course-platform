@@ -96,7 +96,7 @@ export async function terminateSession() {
   const usersSession = await getSession();
 
   if (!usersSession?.userId) {
-    throw new Error("session not found");
+    return { error: "session not found" };
   }
 
   const result = await db
@@ -112,7 +112,7 @@ export async function terminateSession() {
   console.log("Deletion result:", result);
 
   if (result.length === 0) {
-    throw new Error("session not found");
+    return { error: "session not found" };
   }
 
   (await cookies()).delete("session");

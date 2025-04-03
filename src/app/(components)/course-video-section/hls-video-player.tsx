@@ -1,22 +1,12 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Hls from "hls.js";
-import {
-  Loader2,
-  Play,
-  Pause,
-  RotateCcw,
-  Maximize,
-  Minimize,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+
+import { useEffect, useRef, useState } from "react";
+import ReactHlsPlayer from "react-hls-player";
+import { Maximize, Minimize, Pause, Play, RotateCcw } from "lucide-react";
 import { CompletionDialog } from "./completion-dialog";
 
 interface HLSVideoPlayerProps {
-  section: {
+  section?: {
     id: string;
     title: string;
     videoUrl: string;
@@ -36,169 +26,60 @@ export default function HLSVideoPlayer({
   saveProgress = true,
   courseId,
 }: HLSVideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const playerRef = useRef<HTMLVideoElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
-  const lastAllowedTimeRef = useRef(0);
+  const [progress, setProgress] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
 
-  const storageKey = `hls-player-progress-${hashString(section.id)}`;
-
-  function hashString(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString(36);
-  }
-
-  const saveVideoProgress = useCallback(() => {
-    if (!videoRef.current) return;
-
-    const video = videoRef.current;
-    const progressData = {
-      currentTime: video.currentTime,
-      duration: video.duration,
-      lastUpdated: new Date().getTime(),
-    };
-
-    try {
-      // Only save if we've watched more than 5 seconds and less than 95% of the video
-      if (video.currentTime > 5 && video.currentTime < video.duration * 0.95) {
-        localStorage.setItem(storageKey, JSON.stringify(progressData));
-      }
-    } catch (e) {
-      console.error("Failed to save progress to localStorage:", e);
-    }
-  }, [storageKey, videoRef]);
+  const storageKey = `video-progress-${courseId ? courseId + "-" : ""}${
+    section?.id
+  }`;
 
   // Load saved progress from localStorage
-  const loadVideoProgress = useCallback((): number | null => {
-    if (!saveProgress) return null;
-
-    try {
-      const savedData = localStorage.getItem(storageKey);
-      if (!savedData) return null;
-
-      const progressData = JSON.parse(savedData);
-
-      // Check if the saved data is valid and not too old (30 days)
-      const now = new Date().getTime();
-      const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
-
-      if (
-        progressData.currentTime &&
-        progressData.duration &&
-        now - progressData.lastUpdated < thirtyDaysInMs
-      ) {
-        // Only restore if we're not at the end of the video
-        if (progressData.currentTime < progressData.duration * 0.95) {
-          return progressData.currentTime;
-        }
-      }
-
-      return null;
-    } catch (e) {
-      console.error("Failed to load progress from localStorage:", e);
-      return null;
-    }
-  }, [storageKey, saveProgress]);
-
-  // Clear saved progress
-  const clearSavedProgress = useCallback(() => {
-    try {
-      localStorage.removeItem(storageKey);
-    } catch (e) {
-      console.error("Failed to clear progress from localStorage:", e);
-    }
-  }, [storageKey]);
-
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let hls: Hls | null = null;
-
-    const setupHls = () => {
-      setIsLoading(true);
-      setError(null);
-
-      if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        // Native HLS support (Safari)
-        video.src = section.videoUrl;
-      } else if (Hls.isSupported()) {
-        // Use hls.js for other browsers
-        hls = new Hls({
-          enableWorker: true,
-          lowLatencyMode: true,
-        });
-
-        hls.loadSource(section.videoUrl);
-        hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // Video is ready to play
-        });
-
-        hls.on(Hls.Events.ERROR, (_, data) => {
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                setError("Network error, trying to recover...");
-                hls?.startLoad();
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                setError("Media error, trying to recover...");
-                hls?.recoverMediaError();
-                break;
-              default:
-                setError("Fatal error: " + data.details);
-                hls?.destroy();
-                break;
-            }
-          }
-        });
-      } else {
-        setError("Your browser doesn't support HLS playback");
+    if (saveProgress && playerRef.current) {
+      const savedProgress = localStorage.getItem(storageKey);
+      if (savedProgress) {
+        const time = parseFloat(savedProgress);
+        playerRef.current.currentTime = time;
+        setCurrentTime(time);
       }
-    };
+    }
+  }, [saveProgress, storageKey]);
 
-    setupHls();
-
-    const handleLoadedData = () => {
-      setIsLoading(false);
-      setDuration(video.duration);
-
-      // Restore progress if available
-      const savedTime = loadVideoProgress();
-      if (savedTime !== null) {
-        video.currentTime = savedTime;
-        lastAllowedTimeRef.current = savedTime;
-      }
-    };
+  // Handle video events
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
 
     const handleTimeUpdate = () => {
-      setCurrentTime(video.currentTime);
-      setProgress((video.currentTime / video.duration) * 100);
-      lastAllowedTimeRef.current = video.currentTime;
+      const current = player.currentTime;
+      setCurrentTime(current);
 
-      // Save progress periodically (throttled)
-      if (saveProgress && !saveTimeoutRef.current) {
-        saveTimeoutRef.current = setTimeout(() => {
-          saveVideoProgress();
-          saveTimeoutRef.current = null;
-        }, 2000); // Save every 2 seconds
+      if (saveProgress) {
+        localStorage.setItem(storageKey, current.toString());
       }
+
+      const progressPercent = (current / player.duration) * 100;
+      setProgress(progressPercent);
+
+      // Check if video is near completion (within 2 seconds)
+      if (
+        player.duration > 0 &&
+        (player.duration - current <= 2 || current >= player.duration)
+      ) {
+        setIsCompleted(true);
+        onComplete?.();
+      }
+    };
+
+    const handleDurationChange = () => {
+      setDuration(player.duration);
     };
 
     const handlePlay = () => {
@@ -207,211 +88,71 @@ export default function HLSVideoPlayer({
 
     const handlePause = () => {
       setIsPlaying(false);
-      // Save progress immediately when paused
-      if (saveProgress) {
-        saveVideoProgress();
-      }
     };
 
-    const handleEnded = () => {
-      setIsPlaying(false);
-
-      // Clear saved progress when video ends
-      if (saveProgress) {
-        clearSavedProgress();
-      }
-
-      // Show completion dialog
-      setShowCompletionDialog(true);
-
-      // Call onComplete callback if provided
-      if (onComplete) {
-        onComplete();
-      }
-    };
-
-    // Prevent seeking forward by monitoring timeupdate
-    const handleSeeking = () => {
-      if (video.currentTime > lastAllowedTimeRef.current) {
-        video.currentTime = lastAllowedTimeRef.current;
-      }
-    };
-
-    video.addEventListener("loadeddata", handleLoadedData);
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("play", handlePlay);
-    video.addEventListener("pause", handlePause);
-    video.addEventListener("ended", handleEnded);
-    video.addEventListener("seeking", handleSeeking);
+    player.addEventListener("timeupdate", handleTimeUpdate);
+    player.addEventListener("durationchange", handleDurationChange);
+    player.addEventListener("play", handlePlay);
+    player.addEventListener("pause", handlePause);
 
     return () => {
-      video.removeEventListener("loadeddata", handleLoadedData);
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("play", handlePlay);
-      video.removeEventListener("pause", handlePause);
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("seeking", handleSeeking);
-
-      // Clear any pending save timeout
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-
-      if (hls) {
-        hls.destroy();
-      }
+      player.removeEventListener("timeupdate", handleTimeUpdate);
+      player.removeEventListener("durationchange", handleDurationChange);
+      player.removeEventListener("play", handlePlay);
+      player.removeEventListener("pause", handlePause);
     };
-  }, [
-    section.videoUrl,
-    onComplete,
-    saveProgress,
-    storageKey,
-    videoRef,
-    setIsLoading,
-    setError,
-    setDuration,
-    setCurrentTime,
-    setProgress,
-    setIsPlaying,
-    setShowCompletionDialog,
-    loadVideoProgress,
-    saveVideoProgress,
-    clearSavedProgress,
-    lastAllowedTimeRef,
-    saveTimeoutRef,
-  ]);
+  }, [onComplete, saveProgress, storageKey]);
 
-  const togglePlay = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-    } else {
-      video.play().catch((err) => {
-        console.error("Play failed:", err);
-      });
-    }
-  }, [isPlaying, videoRef]);
-
-  // Handle click on video to toggle play/pause
-  const handleVideoClick = (e: React.MouseEvent) => {
-    // Prevent click from triggering if user clicked on controls
-    if (e.target === videoRef.current) {
-      togglePlay();
-    }
-  };
-
-  // Handle keyboard events (spacebar)
+  // Handle fullscreen
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Check if spacebar is pressed and the container is focused or contains the active element
-      if (
-        e.code === "Space" &&
-        (document.activeElement === container ||
-          container.contains(document.activeElement))
-      ) {
-        e.preventDefault(); // Prevent page scrolling
-        togglePlay();
-      }
-    };
-
-    // Make the container focusable
-    container.tabIndex = 0;
-
-    // Add event listener
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [togglePlay]);
-
-  // Handle fullscreen change events
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     const handleFullscreenChange = () => {
-      setIsFullscreen(
-        document.fullscreenElement === container ||
-          // @ts-expect-error - Safari prefixed version
-          document.webkitFullscreenElement === container ||
-          // @ts-expect-error - Firefox prefixed version
-          document.mozFullScreenElement === container ||
-          // @ts-expect-error - IE/Edge prefixed version
-          document.msFullscreenElement === container
-      );
+      setIsFullscreen(!!document.fullscreenElement);
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
-    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
-
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener(
-        "webkitfullscreenchange",
-        handleFullscreenChange
-      );
-      document.removeEventListener(
-        "mozfullscreenchange",
-        handleFullscreenChange
-      );
-      document.removeEventListener(
-        "MSFullscreenChange",
-        handleFullscreenChange
-      );
     };
   }, []);
 
-  const seekBackward = () => {
-    const video = videoRef.current;
-    if (!video) return;
+  const togglePlay = () => {
+    if (playerRef.current) {
+      if (isPlaying) {
+        playerRef.current.pause();
+      } else {
+        playerRef.current.play();
+      }
+    }
+  };
 
-    const newTime = Math.max(0, video.currentTime - backwardSeekSeconds);
-    video.currentTime = newTime;
-    lastAllowedTimeRef.current = newTime;
+  const seekBackward = () => {
+    if (playerRef.current) {
+      playerRef.current.currentTime = Math.max(
+        0,
+        playerRef.current.currentTime - backwardSeekSeconds
+      );
+    }
   };
 
   const toggleFullscreen = () => {
-    const container = containerRef.current;
-    if (!container) return;
+    if (!document.fullscreenElement) {
+      playerContainerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
-    try {
-      if (!isFullscreen) {
-        if (container.requestFullscreen) {
-          container.requestFullscreen();
-        } else if ((container as any).webkitRequestFullscreen) {
-          // Safari
-          (container as any).webkitRequestFullscreen();
-        } else if ((container as any).mozRequestFullScreen) {
-          // Firefox
-          (container as any).mozRequestFullScreen();
-        } else if ((container as any).msRequestFullscreen) {
-          // IE/Edge
-          (container as any).msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-          // Safari
-          (document as any).webkitExitFullscreen();
-        } else if ((document as any).mozCancelFullScreen) {
-          // Firefox
-          (document as any).mozCancelFullScreen();
-        } else if ((document as any).msExitFullscreen) {
-          // IE/Edge
-          (document as any).msExitFullscreen();
-        }
-      }
-    } catch (error) {
-      console.error("Fullscreen API error:", error);
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!progressBarRef.current || !playerRef.current) return;
+
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percentClicked = (clickX / rect.width) * 100;
+
+    // Only allow seeking backward
+    const targetTime = (percentClicked / 100) * duration;
+    if (targetTime < currentTime) {
+      playerRef.current.currentTime = targetTime;
     }
   };
 
@@ -421,122 +162,80 @@ export default function HLSVideoPlayer({
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  const handleProgressChange = (value: number[]) => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const newTime = (value[0] / 100) * duration;
-
-    // Only allow seeking backward
-    if (newTime <= lastAllowedTimeRef.current) {
-      video.currentTime = newTime;
-      setCurrentTime(newTime);
-      setProgress(value[0]);
-    } else {
-      // Reset to last allowed time if trying to seek forward
-      setProgress((lastAllowedTimeRef.current / duration) * 100);
-    }
-  };
-
   return (
-    <>
-      <div
-        ref={containerRef}
-        className={`relative lg:w-[70%] overflow-hidden border border-border  h-auto focus:outline-none ${
-          isFullscreen ? "bg-black" : ""
-        }`}
-      >
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        )}
-
-        {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
-            <div className="text-white text-center p-4">
-              <p className="text-red-400 font-medium">Error</p>
-              <p>{error}</p>
-            </div>
-          </div>
-        )}
-
-        <video
-          ref={videoRef}
-          className="w-full h-auto  cursor-pointer"
-          muted={muted}
-          playsInline
-          onClick={handleVideoClick}
-        />
-
-        {/* Custom controls */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-          <div className="flex flex-col gap-2">
-            {/* Progress bar */}
-            <div className="w-full px-1" ref={progressRef}>
-              <Slider
-                value={[progress]}
-                min={0}
-                max={100}
-                step={0.1}
-                onValueChange={handleProgressChange}
-                className="[&>span:first-child]:h-1.5 [&>span:first-child]:bg-white/30 [&_[role=slider]]:bg-primary [&_[role=slider]]:w-3 [&_[role=slider]]:h-3 [&_[role=slider]]:border-0 [&>span:first-child_span]:bg-primary [&_[role=slider]:focus-visible]:ring-0 [&_[role=slider]:focus-visible]:ring-offset-0"
-              />
-            </div>
-
-            {/* Controls */}
-            <div className="flex items-center gap-3">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={togglePlay}
-                className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 text-white"
-              >
-                {isPlaying ? (
-                  <Pause className="h-5 w-5" />
-                ) : (
-                  <Play className="h-5 w-5" />
-                )}
-              </Button>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={seekBackward}
-                className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 text-white"
-              >
-                <RotateCcw className="h-5 w-5" />
-              </Button>
-
-              <div className="text-xs text-white">
-                {formatTime(currentTime)} / {formatTime(duration)}
-              </div>
-
-              {/* Fullscreen toggle button */}
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={toggleFullscreen}
-                className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 text-white ml-auto"
-              >
-                {isFullscreen ? (
-                  <Minimize className="h-5 w-5" />
-                ) : (
-                  <Maximize className="h-5 w-5" />
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div
+      ref={playerContainerRef}
+      className="relative w-full bg-black  overflow-hidden"
+    >
+      <div className="absolute top-0 left-0 right-0 p-4 z-10 bg-gradient-to-b from-black/70 to-transparent">
+        <h3 className="text-white font-medium">{section?.title}</h3>
       </div>
-
-      {/* Completion Dialog */}
-      <CompletionDialog
-        open={showCompletionDialog}
-        onOpenChange={setShowCompletionDialog}
-        courseId={courseId}
-        sectionId={section.id}
+      <ReactHlsPlayer
+        src={section?.videoUrl ?? ""}
+        autoPlay={false}
+        controls={false}
+        width="100%"
+        height="auto"
+        playerRef={playerRef as React.RefObject<HTMLVideoElement>}
+        muted={muted}
+        className="w-full aspect-video"
+        onEnded={() => {
+          if (!isCompleted) {
+            setIsCompleted(true);
+          }
+        }}
       />
-    </>
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+        {/* Progress bar */}
+        <div
+          ref={progressBarRef}
+          className="w-full h-1 bg-gray-600 rounded-full mb-4 cursor-pointer"
+          onClick={handleProgressBarClick}
+        >
+          <div
+            className="h-full bg-white rounded-full"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={togglePlay}
+              className="text-white hover:text-gray-300 transition"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+            </button>
+
+            <button
+              onClick={seekBackward}
+              className="text-white hover:text-gray-300 transition"
+              aria-label={`Rewind ${backwardSeekSeconds} seconds`}
+            >
+              <RotateCcw size={20} />
+            </button>
+
+            <div className="text-white text-sm">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </div>
+          </div>
+
+          <button
+            onClick={toggleFullscreen}
+            className="text-white hover:text-gray-300 transition"
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          >
+            {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+          </button>
+        </div>
+        <CompletionDialog
+          open={isCompleted}
+          onOpenChange={() => setIsCompleted((prev) => !prev)}
+          courseId={courseId ?? ""}
+          sectionId={section?.id ?? ""}
+        />
+      </div>
+    </div>
   );
 }
