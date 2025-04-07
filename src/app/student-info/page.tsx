@@ -14,7 +14,7 @@ export default function StudentInfoPage() {
      <div className=" flex flex-col md:flex-row  items-center justify-center  py-12 px-6 rounded-md">
 
         <div className="w-full max-w-2xl hidden md:block ">
-            <Image src="/wtgf.jpg" alt="Student studying" width={600} height={600} priority />
+            <Image src="/learning.png" alt="Student studying" width={700} height={600} priority />
         </div>
         <Card className="w-full max-w-md border-0 shadow-none bg-transparent">
             <CardHeader className="space-y-1">
