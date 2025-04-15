@@ -15,7 +15,7 @@ import { relations } from "drizzle-orm/relations";
 export const courses = pgTable("courses", {
   id: uuid().defaultRandom().primaryKey().notNull(),
   title: text().notNull(),
-  description: varchar({ length: 255 }),
+  description: varchar({ length: 254 }),
   imageUrl: text("image_url"),
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
     .defaultNow()
@@ -26,25 +26,36 @@ export const courses = pgTable("courses", {
   deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
 });
 
-export const users = pgTable("users", {
-  id: uuid().defaultRandom().primaryKey().notNull(),
-  email: varchar({ length: 255 }).notNull(),
-  password: varchar({ length: 255 }).notNull(),
-  firstName: varchar("first_name", { length: 100 }),
-  lastName: varchar("last_name", { length: 100 }),
-  otherNames: varchar("other_names", { length: 100 }),
-  role: varchar({ length: 50 }).default("user").notNull(),
-  profilePicture: varchar("profile_picture", { length: 255 }),
-  dateOfBirth: date("date_of_birth"),
-  gender: varchar(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-  deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    email: varchar({ length: 254 }).notNull(),
+    password: varchar({ length: 254 }).notNull(),
+    firstName: varchar("first_name", { length: 99 }),
+    lastName: varchar("last_name", { length: 99 }),
+    otherNames: varchar("other_names", { length: 99 }),
+    role: varchar({ length: 49 }).default("user").notNull(),
+    profilePicture: varchar("profile_picture", { length: 254 }),
+    dateOfBirth: date("date_of_birth"),
+    megaCenter: uuid("mc_id"),
+    gender: varchar(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.megaCenter],
+      foreignColumns: [megaCenters.id],
+      name: "users_mc_id_mega_centers_id_fk",
+    }),
+  ]
+);
 
 export const sessions = pgTable(
   "sessions",
@@ -52,10 +63,10 @@ export const sessions = pgTable(
     id: uuid().defaultRandom().primaryKey().notNull(),
     userId: uuid("user_id").notNull(),
     token: text().notNull(),
-    deviceType: varchar("device_type", { length: 50 }).notNull(),
-    deviceName: varchar("device_name", { length: 100 }).notNull(),
-    browser: varchar({ length: 50 }).notNull(),
-    operatingSystem: varchar("operating_system", { length: 50 }).notNull(),
+    deviceType: varchar("device_type", { length: 49 }).notNull(),
+    deviceName: varchar("device_name", { length: 99 }).notNull(),
+    browser: varchar({ length: 49 }).notNull(),
+    operatingSystem: varchar("operating_system", { length: 49 }).notNull(),
     lastActiveAt: timestamp("last_active_at", {
       withTimezone: true,
     })
@@ -77,6 +88,16 @@ export const sessions = pgTable(
   ]
 );
 
+export const megaCenters = pgTable("mega_centers", {
+  id: uuid().defaultRandom().primaryKey().notNull(),
+  church: varchar("church", { length: 49 }),
+  zonalPastor: varchar("zonal_pastor", { length: 49 }),
+  name: varchar("name", { length: 49 }).notNull(),
+  head: varchar("mc_head", { length: 49 }),
+  email: varchar("mc_email", { length: 49 }),
+  phone: varchar("mc_phone", { length: 49 }),
+});
+
 export const sections = pgTable(
   "sections",
   {
@@ -92,7 +113,7 @@ export const sections = pgTable(
       .defaultNow()
       .notNull(),
     deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "string" }),
-    videoUrl: varchar("video_url", { length: 255 }).notNull(),
+    videoUrl: varchar("video_url", { length: 254 }).notNull(),
   },
   (table) => [
     foreignKey({
@@ -162,6 +183,10 @@ export const userSections = pgTable(
   ]
 );
 
+export const megaCenterRelations = relations(megaCenters, ({ many }) => ({
+  users: many(users),
+}));
+
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, {
     fields: [sessions.userId],
@@ -169,10 +194,14 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   sessions: many(sessions),
   userCourses: many(userCourses),
   userSections: many(userSections),
+  megacenters: one(megaCenters, {
+    fields: [users.megaCenter],
+    references: [megaCenters.id],
+  }),
 }));
 
 export const sectionsRelations = relations(sections, ({ one, many }) => ({
@@ -229,3 +258,6 @@ export type NewCourseSections = typeof sections.$inferInsert;
 
 export type userCourseSections = typeof userSections.$inferSelect;
 export type NewuserCourseSections = typeof userSections.$inferInsert;
+
+export type MegaCenter = typeof megaCenters.$inferSelect;
+export type NewMegaCenter = typeof megaCenters.$inferInsert;
