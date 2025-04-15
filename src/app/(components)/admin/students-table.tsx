@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import {
-  SearchIcon,
   ArrowUpIcon,
   ArrowDownIcon,
   CheckIcon,
   XIcon,
   UsersIcon,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,11 +27,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { type Student, useStudents } from "../../hooks/use-students";
 
-export default function StudentsTable({ courseId }: { courseId: string }) {
-  const { students, isLoading } = useStudents({ courseId });
+export default function StudentsTable() {
+  const { students, isLoading } = useStudents({
+    courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
+  });
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [limit, setLimit] = useState(10);
@@ -84,36 +86,25 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
       {/* Total Students Count */}
       <div className="flex items-center gap-2 mb-4">
         <UsersIcon className="h-5 w-5 text-muted-foreground" />
-        <h3 className="text-lg font-medium">
+        <h6 className=" font-medium text-muted-foreground">
           Total Students: {students?.length || 0}
-        </h3>
-        {statusFilter !== "all" && (
-          <Badge className="ml-2">
-            Showing:{" "}
-            {statusFilter === "completed"
-              ? "Completed"
-              : statusFilter === "in-progress"
-              ? "In Progress"
-              : "Not Started"}
-          </Badge>
-        )}
+        </h6>
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <SearchIcon className="h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col gap-x-6 lg:gap-x-[30%] sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 flex-1">
           <Input
             placeholder="Filter students..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-8 w-[150px] lg:w-[250px]"
+            className="h-8  w-full"
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2">
-            <p className="text-sm text-muted-foreground">Status:</p>
+            <p className="text-sm text-muted-foreground">Filter:</p>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="h-8 w-[130px]">
+              <SelectTrigger className="h-8 ">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
@@ -126,13 +117,12 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <p className="text-sm text-muted-foreground">Show</p>
             <Select
               value={String(limit)}
               onValueChange={(value) => setLimit(Number(value))}
             >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder="10" />
+              <SelectTrigger className="h-8 ">
+                <SelectValue placeholder="10" /> <p className="ml-1">items</p>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="10">10</SelectItem>
@@ -141,62 +131,12 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                 <SelectItem value="100">100</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">per page</p>
+            <p className="text-sm text-nowrap text-muted-foreground">
+              per page
+            </p>
           </div>
         </div>
       </div>
-
-      {/* Quick Filter Buttons */}
-      <div className="flex flex-wrap gap-2 my-4">
-        <Button
-          variant={statusFilter === "all" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setStatusFilter("all")}
-        >
-          All Students ({students?.length || 0})
-        </Button>
-        <Button
-          variant={statusFilter === "completed" ? "default" : "outline"}
-          size="sm"
-          className={
-            statusFilter === "completed"
-              ? ""
-              : "border-green-200 text-green-700 hover:bg-green-50"
-          }
-          onClick={() => setStatusFilter("completed")}
-        >
-          <CheckIcon className="mr-1 h-4 w-4" />
-          Completed ({students?.filter((s) => s.courseCompleted).length || 0})
-        </Button>
-        <Button
-          variant={statusFilter === "in-progress" ? "default" : "outline"}
-          size="sm"
-          className={
-            statusFilter === "in-progress"
-              ? ""
-              : "border-yellow-200 text-yellow-700 hover:bg-yellow-50"
-          }
-          onClick={() => setStatusFilter("in-progress")}
-        >
-          In Progress (
-          {students?.filter((s) => s.progress > 0 && s.progress < 100).length ||
-            0}
-          )
-        </Button>
-        <Button
-          variant={statusFilter === "not-started" ? "default" : "outline"}
-          size="sm"
-          className={
-            statusFilter === "not-started"
-              ? ""
-              : "border-gray-200 text-gray-700 hover:bg-gray-50"
-          }
-          onClick={() => setStatusFilter("not-started")}
-        >
-          Not Started ({students?.filter((s) => s.progress === 0).length || 0})
-        </Button>
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -271,8 +211,8 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
               </TableRow>
             ) : (
               displayedStudents.map((student, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
+                <TableRow key={index} className="">
+                  <TableCell className="font-medium truncate">
                     {student.firstName} {student.lastName}
                   </TableCell>
                   <TableCell>{student.email}</TableCell>
@@ -306,26 +246,29 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page <= 1}
-          onClick={() => setPage(page - 1)}
-        >
-          Previous
-        </Button>
-        <span>
-          Page {page} of {totalPages}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-x-2 items-center">
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={page <= 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <ChevronLeft className="text-muted-foreground" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={page >= totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <ChevronRight className="text-muted-foreground" />
+          </Button>
+        </div>
+        <span className="text-muted-foreground">
+          Page {page} / {totalPages}
         </span>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page >= totalPages}
-          onClick={() => setPage(page + 1)}
-        >
-          Next
-        </Button>
       </div>
     </div>
   );
