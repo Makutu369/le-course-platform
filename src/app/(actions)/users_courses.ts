@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { eq } from "drizzle-orm";
 
 import { userCourses, users } from "@/db/schema";
+import { getAllMegaCenters } from "@/lib/queries/auth";
 
 export async function getUsersEnrolledInCourse(courseId: string) {
     return await db
@@ -18,4 +19,6 @@ export async function getUsersEnrolledInCourse(courseId: string) {
       .where(eq(userCourses.courseId, courseId)); 
   }
 
+
+ 
   

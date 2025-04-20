@@ -67,6 +67,7 @@ export async function setSession(user: User) {
 }
 
 export async function getSession() {
+try {
   const { db } = await import("@/db");
   const sessionCookie = (await cookies()).get("session");
   if (!sessionCookie?.value) return null;
@@ -89,6 +90,9 @@ export async function getSession() {
     .where(eq(sessions.id, session.id));
 
   return session;
+} catch (error) {
+  console.error("Error getting session:", error);
+}
 }
 
 export async function terminateSession() {
