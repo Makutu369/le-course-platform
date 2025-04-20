@@ -38,11 +38,11 @@ export default function StudentInfoForm({ megaCenters }: { megaCenters: MegaCent
     }
   }
 
-  // Format phone number as user types
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Remove non-numeric characters
+   
     const value = e.target.value.replace(/\D/g, "")
-    // Limit to 10 digits
+  
     const formattedValue = value.slice(0, 10)
     setContact(formattedValue)
   }
