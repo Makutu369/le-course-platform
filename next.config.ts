@@ -5,13 +5,17 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pub-546db527047a487f9977fbd02e06ff08.r2.dev",
+        hostname: "**.r2.dev",
+
         port: "",
         pathname: "**",
         search: "",
       },
     ],
   },
+  env: {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_jnkbTK1I2QiZ@ep-sweet-sea-a56c1axw-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require",
+  }
 };
 
 export default nextConfig;

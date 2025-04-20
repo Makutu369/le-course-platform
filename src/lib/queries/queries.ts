@@ -161,6 +161,8 @@ export async function getUser(userId: string) {
       lastName: true,
       profilePicture: true,
       email: true,
+      phone: true,
+      megaCenter: true,
     },
   });
   return user;
