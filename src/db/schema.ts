@@ -34,6 +34,7 @@ export const users = pgTable(
     password: varchar({ length: 254 }).notNull(),
     firstName: varchar("first_name", { length: 99 }),
     lastName: varchar("last_name", { length: 99 }),
+    phone: varchar("phone", { length: 49 }),
     otherNames: varchar("other_names", { length: 99 }),
     role: varchar({ length: 49 }).default("user").notNull(),
     profilePicture: varchar("profile_picture", { length: 254 }),
