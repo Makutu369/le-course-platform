@@ -14,7 +14,6 @@ export async function setSession(user: User) {
     user: { id: user.id, role: user.role, email: user.email },
     expires: expiresInOneDay.toISOString(),
   };
-  console.log("Setting session for user:", user); // Log the user object
 
   if (!user?.id || !user?.role) {
     console.error("User object is missing required fields:", user);
@@ -48,8 +47,6 @@ export async function setSession(user: User) {
       })
       .returning();
 
-    console.log("Session insert result:", result); // Log DB insert result
-
     if (result.length === 0) {
       throw new Error("Failed to insert session into database.");
     }
@@ -67,32 +64,32 @@ export async function setSession(user: User) {
 }
 
 export async function getSession() {
-try {
-  const { db } = await import("@/db");
-  const sessionCookie = (await cookies()).get("session");
-  if (!sessionCookie?.value) return null;
+  try {
+    const { db } = await import("@/db");
+    const sessionCookie = (await cookies()).get("session");
+    if (!sessionCookie?.value) return null;
 
-  const session = await db.query.sessions.findFirst({
-    where: (sessions, { eq }) => eq(sessions.token, sessionCookie.value),
-  });
+    const session = await db.query.sessions.findFirst({
+      where: (sessions, { eq }) => eq(sessions.token, sessionCookie.value),
+    });
 
-  if (!session) return null;
+    if (!session) return null;
 
-  const sessionData = await verifyToken(sessionCookie.value);
+    const sessionData = await verifyToken(sessionCookie.value);
 
-  if (!sessionData?.user?.id || typeof sessionData.user.id !== "string")
-    return null;
-  if (new Date(sessionData.expires) < new Date()) return null;
+    if (!sessionData?.user?.id || typeof sessionData.user.id !== "string")
+      return null;
+    if (new Date(sessionData.expires) < new Date()) return null;
 
-  await db
-    .update(sessions)
-    .set({ lastActiveAt: new Date() })
-    .where(eq(sessions.id, session.id));
+    await db
+      .update(sessions)
+      .set({ lastActiveAt: new Date() })
+      .where(eq(sessions.id, session.id));
 
-  return session;
-} catch (error) {
-  console.error("Error getting session:", error);
-}
+    return session;
+  } catch (error) {
+    console.error("Error getting session:", error);
+  }
 }
 
 export async function terminateSession() {

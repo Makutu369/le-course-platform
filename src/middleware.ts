@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { ADMIN_EMAILS } from "@/lib/utils";
 
-
 const publicRoutes = ["/"];
 
 async function _verifySession( req: NextRequest) {
@@ -15,7 +14,6 @@ export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isPublicRoute = publicRoutes.includes(path);
 
- 
   if (path.startsWith("/admin")) {
     const sessionCookie = req.cookies.get("session");
     if (!sessionCookie) {
@@ -39,15 +37,16 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  
-
-  
-  const session = await _verifySession(req);
+  const session = await _verifySession();
   if (!isPublicRoute && !session?.user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
-  if (isPublicRoute && session?.user && !req.nextUrl.pathname.startsWith("/courses")) {
+  if (
+    isPublicRoute &&
+    session?.user &&
+    !req.nextUrl.pathname.startsWith("/courses")
+  ) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
@@ -59,8 +58,8 @@ export async function middleware(req: NextRequest) {
 
   const data = await res.json();
   console.log("Response from additional-info API:", data);
-  if (data.isNotAuthenticated){
-      return NextResponse.next();
+  if (data.isNotAuthenticated) {
+    return NextResponse.next();
   }
   if (!data.isAdded) {
     return NextResponse.redirect(new URL("/student-info", req.url));
@@ -71,5 +70,5 @@ export async function middleware(req: NextRequest) {
 
 // Define Middleware Matchers
 export const config = {
-  matcher: ["/courses",  "/courses/:path*", "/admin/:path*"],
+  matcher: ["/courses", "/courses/:path*", "/admin/:path*"],
 };
