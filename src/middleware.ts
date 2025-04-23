@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 import { ADMIN_EMAILS } from "@/lib/utils";
-import { checkAdditionalInfoAdded, findUserByEmail } from "./lib/queries/auth";
-import { megaCenters } from './db/schema';
+
 
 const publicRoutes = ["/"];
 
-async function _verifySession() {
-  const session = (await cookies()).get("session");
-  if (!session) return null;
-  return await verifyToken(session.value);
+async function _verifySession( req: NextRequest) {
+  const sessionCookie = req.cookies.get("session"); 
+  if (!sessionCookie) return null;
+  return await verifyToken(sessionCookie.value)
 }
 
 export async function middleware(req: NextRequest) {
@@ -44,7 +42,7 @@ export async function middleware(req: NextRequest) {
   
 
   
-  const session = await _verifySession();
+  const session = await _verifySession(req);
   if (!isPublicRoute && !session?.user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }

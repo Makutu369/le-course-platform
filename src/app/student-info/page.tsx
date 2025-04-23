@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import ServerMegaCenters from "./ServerMegaCenter";
 import StudentInfoForm from "./student-form";
 

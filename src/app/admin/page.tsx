@@ -1,4 +1,7 @@
+export const dynamic = 'force-dynamic';
+
 import StudentsTable from "../(components)/admin/students-table";
+
 
 async function CourseUsersPage() {
   return (

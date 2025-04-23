@@ -4,8 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
 import { getSession } from "../session";
-import { verifyToken } from "../jwt";
-import { getUser } from "./queries";
+
 
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
@@ -80,7 +79,7 @@ export async function addUserPhone(phone:string){
     const sessionData = await getSession();
 
   
-  const res = await db.update(users).set({phone: phone}).where(eq(users.id, sessionData?.userId ?? ""))
+ await db.update(users).set({phone: phone}).where(eq(users.id, sessionData?.userId ?? ""))
 
  
     

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const { db } = await import("@/db");
+        
         const { checkAdditionalInfoAdded } = await import("@/lib/queries/auth");
         const sessionCookie = req.cookies.get("session");
 
