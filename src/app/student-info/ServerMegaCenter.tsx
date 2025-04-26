@@ -1,3 +1,4 @@
+"use server";
 import { getAllMegaCenters } from "@/lib/queries/auth";
 
 
