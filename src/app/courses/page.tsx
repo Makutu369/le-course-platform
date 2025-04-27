@@ -1,4 +1,5 @@
-"use server";
+export const dynamic = 'force-dynamic';
+
 import { getCourses } from "@/lib/queries/queries";
 import CourseCard from "../(components)/course-video-section/course-card";
 import { getSession } from "@/lib/session";
