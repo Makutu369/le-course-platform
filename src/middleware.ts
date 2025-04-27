@@ -4,10 +4,12 @@ import { ADMIN_EMAILS } from "@/lib/utils";
 
 const publicRoutes = ["/"];
 
-async function _verifySession(req: NextRequest) {
-  const sessionCookie = req.cookies.get("session");
+
+async function _verifySession( req: NextRequest) {
+  const sessionCookie = req.cookies.get("session"); 
   if (!sessionCookie) return null;
-  return await verifyToken(sessionCookie.value);
+  return await verifyToken(sessionCookie.value)
+
 }
 
 export async function middleware(req: NextRequest) {
