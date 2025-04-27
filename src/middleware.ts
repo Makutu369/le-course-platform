@@ -9,7 +9,6 @@ async function _verifySession( req: NextRequest) {
   const sessionCookie = req.cookies.get("session"); 
   if (!sessionCookie) return null;
   return await verifyToken(sessionCookie.value)
-
 }
 
 export async function middleware(req: NextRequest) {
