@@ -4,10 +4,12 @@ import { ADMIN_EMAILS } from "@/lib/utils";
 
 const publicRoutes = ["/"];
 
+
 async function _verifySession( req: NextRequest) {
   const sessionCookie = req.cookies.get("session"); 
   if (!sessionCookie) return null;
   return await verifyToken(sessionCookie.value)
+
 }
 
 export async function middleware(req: NextRequest) {
@@ -37,7 +39,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  const session = await _verifySession();
+  const session = await _verifySession(req);
   if (!isPublicRoute && !session?.user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
