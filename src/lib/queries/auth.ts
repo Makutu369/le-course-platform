@@ -1,8 +1,9 @@
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { megaCenters, users } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
+import { getSession } from "../session";
 
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
@@ -47,4 +48,55 @@ export async function comparePassword(
   hashedPassword: string
 ) {
   return bcrypt.compare(plainPassword, hashedPassword);
+}
+
+
+export async function checkAdditionalInfoAdded(email: string) {
+  const user = await db
+    .select({
+      phone: users.phone,
+      megaCenter: users.megaCenter,
+    })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (user.length === 0) return false;
+
+  const { phone, megaCenter } = user[0];
+
+  return !!(phone && megaCenter);
+}
+
+export async function getAllMegaCenters() {
+  const centers = await db.select().from(megaCenters);
+
+  return centers;
+}
+export async function assignUserToMC(MegaCenterId: string) {
+  try {
+    const sessionData = await getSession();
+    const res = await db
+      .update(users)
+      .set({ megaCenter: MegaCenterId })
+      .where(eq(users.id, sessionData?.userId ?? ""));
+    return res;
+  } catch (error) {
+    console.error("Error assigning user to mega center:", error);
+    throw error;
+  }
+}
+
+export async function addUserPhone(phone: string) {
+  try {
+    const sessionData = await getSession();
+
+    await db
+      .update(users)
+      .set({ phone: phone })
+      .where(eq(users.id, sessionData?.userId ?? ""));
+  } catch (error) {
+    console.error("Error adding user phone:", error);
+    throw error;
+  }
 }

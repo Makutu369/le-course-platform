@@ -9,8 +9,24 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
+import StartButton from "@/components/startbtn";
+import { checkAdditionalInfoAdded } from "@/lib/queries/auth";
+import { getSession } from "@/lib/session";
+import { getUser } from "@/lib/queries/queries";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+  const userId = session?.userId;
+  if (!userId) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold">Welcome to the Learning Platform</h1>
+        <p className="mt-4 text-lg">Please log in to access your courses.</p>
+      </div>
+    );
+  }
+  const user = await getUser(userId);
+  const isAdded = await checkAdditionalInfoAdded(user?.email ?? "");
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
@@ -38,11 +54,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
-                  <Link href={"/courses"}>
-                    <Button size="lg" className="w-full sm:w-auto">
-                      Start Now
-                    </Button>
-                  </Link>
+                 <StartButton isAdded={isAdded} />  
                 </div>
               </div>
             </div>
