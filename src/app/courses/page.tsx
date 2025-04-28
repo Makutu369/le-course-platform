@@ -1,5 +1,7 @@
+
 "use server";
 import { getCourses, getUser } from "@/lib/queries/queries";
+
 import CourseCard from "../(components)/course-video-section/course-card";
 import { getSession } from "@/lib/session";
 import { checkAdditionalInfoAdded } from "@/lib/queries/auth";

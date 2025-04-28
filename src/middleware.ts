@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 import { ADMIN_EMAILS } from "@/lib/utils";
 
 const publicRoutes = ["/"];
 
-async function _verifySession() {
-  const session = (await cookies()).get("session");
-  if (!session) return null;
-  return await verifyToken(session.value);
+
+async function _verifySession( req: NextRequest) {
+  const sessionCookie = req.cookies.get("session"); 
+  if (!sessionCookie) return null;
+  return await verifyToken(sessionCookie.value)
 }
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isPublicRoute = publicRoutes.includes(path);
 
- 
   if (path.startsWith("/admin")) {
     const sessionCookie = req.cookies.get("session");
     if (!sessionCookie) {
@@ -39,14 +38,32 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  
-  const session = await _verifySession();
+  const session = await _verifySession(req);
   if (!isPublicRoute && !session?.user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
-  if (isPublicRoute && session?.user && !req.nextUrl.pathname.startsWith("/courses")) {
+  if (
+    isPublicRoute &&
+    session?.user &&
+    !req.nextUrl.pathname.startsWith("/courses")
+  ) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
+  }
+
+  const res = await fetch(`${req.nextUrl.origin}/api/additional-info`, {
+    headers: {
+      Cookie: req.headers.get("cookie") || "",
+    },
+  });
+
+  const data = await res.json();
+  console.log("Response from additional-info API:", data);
+  if (data.isNotAuthenticated) {
+    return NextResponse.next();
+  }
+  if (!data.isAdded) {
+    return NextResponse.redirect(new URL("/student-info", req.url));
   }
 
   return NextResponse.next();
@@ -54,5 +71,5 @@ export async function middleware(req: NextRequest) {
 
 // Define Middleware Matchers
 export const config = {
-  matcher: ["/courses",  "/courses/:path*", "/admin/:path*"],
+  matcher: ["/courses", "/courses/:path*", "/admin/:path*"],
 };

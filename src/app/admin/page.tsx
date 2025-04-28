@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -38,6 +39,7 @@ const AdminPanel = () => {
   }, []);
 
   if (loading) return <p>Loading...</p>;
+
 
   return (
     <div>

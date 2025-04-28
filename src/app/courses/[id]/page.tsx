@@ -1,4 +1,6 @@
-"use server";
+
+export const dynamic = 'force-dynamic';
+
 import { db } from "@/db";
 import {
   filterSections,

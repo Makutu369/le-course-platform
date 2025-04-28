@@ -1,142 +1,114 @@
-// import { db } from "@/db";
-// import { NewCourseSections, sections, userSections } from "@/db/schema";
-// import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import {
+  megaCenters,
+  NewCourseSections,
+  NewMegaCenter,
+  sections,
+  userSections,
+} from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-// (async () => {
-//   const newSections: NewCourseSections[] = [
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Born again -1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day1/kp3gffybtyktjk2w2fuy",
-//       sortOrder: 1,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Born again -2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day1/gw6uuhnnqzgfhjkk7osv",
-//       sortOrder: 2,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Born again -3",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day1/kgqpswqb7roglwfjcges",
-//       sortOrder: 3,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "The Holy Spirit - 1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/lkts7ihbqsokvss1h0xw",
-//       sortOrder: 4,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "The Holy Spirit - 2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/pvg9lyu90jypewihfskz",
-//       sortOrder: 5,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "The Holy Spirit - 3",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/peyiy73lhg4o2y1mhhxv",
-//       sortOrder: 6,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Righteousness - 1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day3/vuudqekwq5ukcfqiidhv",
-//       sortOrder: 7,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Righteousness - 2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day3/c7mmq2fyxqqavtgnlvmj",
-//       sortOrder: 8,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Righteousness - 3",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day3/qswmeceweonclvnkoh76",
-//       sortOrder: 9,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "You are not a sinner - 1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-4/shk649g2cmcp9xhbeir5",
-//       sortOrder: 10,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "You are not a sinner - 2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-4/cwyrsf16lfxuirzsrh1g",
-//       sortOrder: 11,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "You are not a sinner - 3",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-4/je5hz1nwqi96qjeqr8a4",
-//       sortOrder: 12,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "You are not a sinner - 4",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-4/h0zttfwshuptj9gghova",
-//       sortOrder: 13,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Soul Winning - 1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day5/sp5jejfzufw9rgbnktk2",
-//       sortOrder: 14,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Soul Winning - 2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day5/mp6scefwt70utxfjqgn5",
-//       sortOrder: 15,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Soul Winning - 3",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day5/gjgcqc1omu5hi3h0cszi",
-//       sortOrder: 15,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Church Commitment - 1",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-6/jkorqyvshtfgeujfawxg",
-//       sortOrder: 16,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Church Commitment - 2",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-6/ukshmzlrlwo7flrcfni7",
-//       sortOrder: 17,
-//     },
-//     {
-//       courseId: "ac9d9782-8282-4cbe-b9b3-494bc7c3b269",
-//       title: "Church Commitment - 4",
-//       videoUrl:
-//         "https://res.cloudinary.com/dp563neb6/video/upload/f_auto:video,q_auto/v1/le-course-platform/wtgf/Day-6/i7zjncqr686dgcaxvis3",
-//       sortOrder: 18,
-//     },
-//   ];
+(async () => {
+  const newCenters: NewMegaCenter[] = [
+    // Church 1 - Rev Giorgio Antwi Adjei Mensah
+    {
+      name: "Agape MC",
+      head: "Eld. Beverly Mensah",
+      church: "Church 1",
+      zonalPastor: "Rev Giorgio Antwi Adjei Mensah",
+    },
+    {
+      name: "Dunamis MC",
+      head: "Eld. Albright Adutwumwaa Kankam",
+      church: "Church 1",
+      zonalPastor: "Rev Giorgio Antwi Adjei Mensah",
+    },
+    {
+      name: "New Testament MC",
+      head: "Eld. Beatrice Djagah",
+      church: "Church 1",
+      zonalPastor: "Rev Giorgio Antwi Adjei Mensah",
+    },
+    {
+      name: "Media SM",
+      head: "Eugene Britwum",
+      church: "Church 1",
+      zonalPastor: "Rev Giorgio Antwi Adjei Mensah",
+    },
 
-// })();
+    // Church 2 - Ps Akua Asare Ankomah
+    {
+      name: "Fruitful MC",
+      head: "Ps. Adwoa Serwaa Boafo",
+      church: "Church 2",
+      zonalPastor: "Ps Akua Asare Ankomah",
+    },
+    {
+      name: "Good news, MC",
+      head: "Eld. Lydia Ewurama Kesse",
+      church: "Church 2",
+      zonalPastor: "Ps Akua Asare Ankomah",
+    },
+    {
+      name: "Called Out MC",
+      head: "Samuel Ohene Enin",
+      church: "Church 2",
+      zonalPastor: "Ps Akua Asare Ankomah",
+    },
+
+    // Church 3 - Ps Samuel Aikins
+    {
+      name: "Proton",
+      head: "Eld. Koeman Tekpeh",
+      church: "Church 3",
+      zonalPastor: "Ps Samuel Aikins",
+    },
+    {
+      name: "Machaira MC",
+      head: "Eld. Enoch Kwofie",
+      church: "Church 3",
+      zonalPastor: "Ps Samuel Aikins",
+    },
+    {
+      name: "Crucible of love",
+      head: "Eld. Abena Amponsah Agyekum",
+      church: "Church 3",
+      zonalPastor: "Ps Samuel Aikins",
+    },
+
+    // Church 4 - Ps Audrey Nana Ama Essiam
+    {
+      name: "Ushering SM",
+      head: "Ps. Paula Bakari",
+      church: "Church 4",
+      zonalPastor: "Ps Audrey Nana Ama Essiam",
+    },
+    {
+      name: "Choir SM",
+      head: "Ps. Adelita Afriyie Amoako",
+      church: "Church 4",
+      zonalPastor: "Ps Audrey Nana Ama Essiam",
+    },
+    {
+      name: "Admin SM",
+      head: "Eld. Amanda Arthur",
+      church: "Church 4",
+      zonalPastor: "Ps Audrey Nana Ama Essiam",
+    },
+    {
+      name: "Children's Church",
+      head: "Eld. Phebe Kayoung",
+      church: "Church 4",
+      zonalPastor: "Ps Audrey Nana Ama Essiam",
+    },
+    {
+      name: "Teens Church",
+      head: "Ps. Audrey Nana Ama Essiam",
+      church: "Church 4",
+      zonalPastor: "Ps Audrey Nana Ama Essiam",
+    },
+  ];
+
+  const result = await db.insert(megaCenters).values(newCenters).returning();
+  console.log(result);
+})();
