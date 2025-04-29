@@ -99,5 +99,9 @@ export async function checkAdditionalInfoAdded() {
   if (!user) return { error: "unauthorised" };
   const { megaCenter } = user;
 
-  megaCenter ? redirect("/courses") : redirect("/student-info");
+  if (!megaCenter) {
+    redirect("/student-info");
+  }
+
+  redirect("/courses");
 }
