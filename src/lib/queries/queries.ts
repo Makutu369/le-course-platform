@@ -2,6 +2,7 @@
 import { db } from "@/db";
 import {
   courses,
+  megaCenters,
   NewuserCourseSections,
   sections,
   userCourses,
@@ -227,4 +228,60 @@ export async function getAllUsersProgressInCourse(courseId: string) {
     progress: Math.round((user.completedSections / totalSections) * 100),
     courseCompleted: user.completedSections === totalSections,
   }));
+}
+
+export async function checkAdditionalInfoAdded() {
+  const currentUser = await getSession();
+  if (!currentUser) return;
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, currentUser.userId),
+    columns: {
+      phone: true,
+      megaCenter: true,
+    },
+  });
+
+  if (!user) return { error: "unauthorised" };
+  const { megaCenter } = user;
+
+  if (!megaCenter) {
+    redirect("/student-info");
+  }
+
+  redirect("/courses");
+}
+
+export async function getAllMegaCenters() {
+  const centers = await db.select().from(megaCenters);
+
+  return centers;
+}
+
+export async function assignUserToMC(MegaCenterId: string) {
+  try {
+    const sessionData = await getSession();
+    const res = await db
+      .update(users)
+      .set({ megaCenter: MegaCenterId })
+      .where(eq(users.id, sessionData?.userId ?? ""));
+    return res;
+  } catch (error) {
+    console.error("Error assigning user to mega center:", error);
+    throw error;
+  }
+}
+
+export async function addUserPhone(phone: string) {
+  try {
+    const sessionData = await getSession();
+
+    await db
+      .update(users)
+      .set({ phone: phone })
+      .where(eq(users.id, sessionData?.userId ?? ""));
+  } catch (error) {
+    console.error("Error adding user phone:", error);
+    throw error;
+  }
 }

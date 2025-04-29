@@ -1,7 +1,8 @@
 "use client";
 import React, { useActionState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { checkAdditionalInfoAdded } from "@/lib/queries/auth";
+import { checkAdditionalInfoAdded } from "@/lib/queries/queries";
+
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
