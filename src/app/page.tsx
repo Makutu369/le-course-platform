@@ -10,8 +10,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Heart, Users, HandIcon as PrayingHands } from "lucide-react";
-
-export default function Home() {
+import StartButton from "@/components/startbtn";
+export default async function Home() {
+  // const user = await getUser(userId);
+  // const isAdded = await checkAdditionalInfoAdded(user?.email ?? "");
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
@@ -39,11 +41,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
-                  <Link href={"/courses"}>
-                    <Button size="lg" className="w-full sm:w-auto">
-                      Start Now
-                    </Button>
-                  </Link>
+                  <StartButton />
                 </div>
               </div>
             </div>
