@@ -1,5 +1,7 @@
 {
-  "id": "21ebc11e-e855-4ff7-80eb-775c1c02476a",
+
+  "id": "3ca5b2c9-5940-4272-9f1d-1d1f21e87773",
+
   "prevId": "4a5c0035-d865-425a-8c8d-46a0adc5a60f",
   "version": "7",
   "dialect": "postgresql",
@@ -73,6 +75,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+
+        "church": {
+          "name": "church",
+          "type": "varchar(49)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zonal_pastor": {
+          "name": "zonal_pastor",
+          "type": "varchar(49)",
+          "primaryKey": false,
+          "notNull": false
+        },
+
         "name": {
           "name": "name",
           "type": "varchar(49)",
@@ -487,6 +503,14 @@
           "primaryKey": false,
           "notNull": false
         },
+
+        "phone": {
+          "name": "phone",
+          "type": "varchar(49)",
+          "primaryKey": false,
+          "notNull": false
+        },
+
         "other_names": {
           "name": "other_names",
           "type": "varchar(99)",

@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
 import { getSession } from "../session";
-
+import { redirect } from "next/navigation";
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
 export async function hashPassword(password: string) {
@@ -34,28 +34,13 @@ export async function createUser(
 export async function findUserByEmail(email: string) {
   return db.select().from(users).where(eq(users.email, email)).limit(1);
 }
-export async function checkAdditionalInfoAdded(email: string) {
-  const user = await db
-    .select({
-      phone: users.phone,
-      megaCenter: users.megaCenter,
-    })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (user.length === 0) return false;
-
-  const { phone, megaCenter } = user[0];
-
-  return !!(phone && megaCenter);
-}
 
 export async function getAllMegaCenters() {
   const centers = await db.select().from(megaCenters);
 
   return centers;
 }
+
 export async function assignUserToMC(MegaCenterId: string) {
   try {
     const sessionData = await getSession();
@@ -83,6 +68,7 @@ export async function addUserPhone(phone: string) {
     throw error;
   }
 }
+
 export function generateToken(user: {
   id: string;
   email: string;
@@ -96,4 +82,22 @@ export async function comparePassword(
   hashedPassword: string
 ) {
   return bcrypt.compare(plainPassword, hashedPassword);
+}
+
+export async function checkAdditionalInfoAdded() {
+  const currentUser = await getSession();
+  if (!currentUser) return;
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, currentUser.userId),
+    columns: {
+      phone: true,
+      megaCenter: true,
+    },
+  });
+
+  if (!user) return { error: "unauthorised" };
+  const { megaCenter } = user;
+
+  megaCenter ? redirect("/courses") : redirect("/student-info");
 }
