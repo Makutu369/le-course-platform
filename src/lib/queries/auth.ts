@@ -1,5 +1,3 @@
-import { db } from "@/db";
-import { megaCenters, users } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
