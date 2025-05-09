@@ -187,9 +187,12 @@ export async function getUsersEnrolledInCourse(courseId: string) {
       email: users.email,
       enrolledAt: userCourses.enrolledAt,
       completed: userCourses.completed,
+      megaCenterid: users.megaCenter,
+      megaCenterName: users.megaCenter,
     })
     .from(userCourses)
     .innerJoin(users, eq(users.id, userCourses.userId))
+    .innerJoin(megaCenters, eq(megaCenters.id, users.megaCenter))
     .where(eq(userCourses.courseId, courseId));
 }
 export async function getAllUsersProgressInCourse(courseId: string) {
@@ -201,33 +204,48 @@ export async function getAllUsersProgressInCourse(courseId: string) {
 
   if (totalSections === 0) return [];
 
-  const usersProgress = await db
-    .select({
-      userId: users.id,
-      firstName: users.firstName,
-      lastName: users.lastName,
-      email: users.email,
-      completedSections: sql<number>`COUNT(${userSections.sectionId})`,
-      completed: sql<boolean>`bool_or(${userCourses.completed})`,
-    })
-    .from(users)
-    .innerJoin(userCourses, eq(users.id, userCourses.userId))
-    .leftJoin(
-      userSections,
-      and(
-        eq(userSections.userId, users.id),
-        eq(userSections.courseId, courseId),
-        eq(userSections.completed, true)
+  try {
+    const usersProgress = await db
+      .select({
+        userId: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+        megaCenterId: users.megaCenter,
+        megaCenterName: megaCenters.name,
+        completedSections: sql<number>`COUNT(${userSections.sectionId})`,
+        completed: sql<boolean>`bool_or(${userCourses.completed})`,
+      })
+      .from(users)
+      .innerJoin(userCourses, eq(users.id, userCourses.userId))
+      .leftJoin(megaCenters, eq(users.megaCenter, megaCenters.id))
+      .leftJoin(
+        userSections,
+        and(
+          eq(userSections.userId, users.id),
+          eq(userSections.courseId, courseId),
+          eq(userSections.completed, true)
+        )
       )
-    )
-    .where(eq(userCourses.courseId, courseId))
-    .groupBy(users.id);
+      .where(eq(userCourses.courseId, courseId))
+      .groupBy(
+        users.id,
+        users.firstName,
+        users.lastName,
+        users.email,
+        users.megaCenter,
+        megaCenters.name
+      );
 
-  return usersProgress.map((user) => ({
-    ...user,
-    progress: Math.round((user.completedSections / totalSections) * 100),
-    courseCompleted: user.completedSections === totalSections,
-  }));
+    return usersProgress.map((user) => ({
+      ...user,
+      progress: Math.round((user.completedSections / totalSections) * 100),
+      courseCompleted: user.completedSections === totalSections,
+    }));
+  } catch (error) {
+    console.error("Error fetching users progress:", error);
+    return [];
+  }
 }
 
 export async function checkAdditionalInfoAdded() {
