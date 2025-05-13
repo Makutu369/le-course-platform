@@ -12,6 +12,7 @@ export type Student = {
   completed: boolean;
   courseCompleted: boolean;
   megaCenterName: string | null;
+  contactNumber: string | null;
 };
 
 type UseStudentsProps = {

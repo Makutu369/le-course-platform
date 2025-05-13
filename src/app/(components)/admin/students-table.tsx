@@ -46,7 +46,6 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
   const [megaCenter, setMegaCenter] = useState<string[]>([]);
   const printSectionRef = useRef<HTMLDivElement | null>(null);
   const [course, setCourse] = useState<{ title: string } | null>(null);
-  
 
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -54,8 +53,6 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
     day: "2-digit",
   });
 
-
-  
   useEffect(() => {
     findUsersCourse(courseId).then((data) => {
       if (data?.course) {
@@ -64,14 +61,15 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
     });
   }, [courseId]);
 
-
   const handlePrint = () => {
     if (printSectionRef.current) {
       // Use browser's print functionality instead of printJS
-      const printWindow = window.open('', '_blank');
+      const printWindow = window.open("", "_blank");
       if (printWindow) {
-        printWindow.document.write('<html><head><title>Student Progress Report</title>');
-        printWindow.document.write('<style>');
+        printWindow.document.write(
+          "<html><head><title>Student Progress Report</title>"
+        );
+        printWindow.document.write("<style>");
         printWindow.document.write(`
           body { font-family: Arial, sans-serif; padding: 20px; }
           table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
@@ -84,9 +82,9 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
           .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
           .no-data { text-align: center; font-style: italic; padding: 10px; }
         `);
-        printWindow.document.write('</style></head><body>');
+        printWindow.document.write("</style></head><body>");
         printWindow.document.write(printSectionRef.current.innerHTML);
-        printWindow.document.write('</body></html>');
+        printWindow.document.write("</body></html>");
         printWindow.document.close();
         printWindow.print();
       }
@@ -188,20 +186,30 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
   // Group students by status for the print view
   const getStudentsByStatus = () => {
     if (!students) return { completed: [], inProgress: [], notStarted: [] };
-    
+
     return {
-      completed: students.filter(student => 
-        (selectedMegaCenter === "all" || student.megaCenterName?.toLowerCase() === selectedMegaCenter.toLowerCase()) && 
-        student.progress === 100
+      completed: students.filter(
+        (student) =>
+          (selectedMegaCenter === "all" ||
+            student.megaCenterName?.toLowerCase() ===
+              selectedMegaCenter.toLowerCase()) &&
+          student.progress === 100
       ),
-      inProgress: students.filter(student => 
-        (selectedMegaCenter === "all" || student.megaCenterName?.toLowerCase() === selectedMegaCenter.toLowerCase()) && 
-        student.progress > 0 && student.progress < 100
+      inProgress: students.filter(
+        (student) =>
+          (selectedMegaCenter === "all" ||
+            student.megaCenterName?.toLowerCase() ===
+              selectedMegaCenter.toLowerCase()) &&
+          student.progress > 0 &&
+          student.progress < 100
       ),
-      notStarted: students.filter(student => 
-        (selectedMegaCenter === "all" || student.megaCenterName?.toLowerCase() === selectedMegaCenter.toLowerCase()) && 
-        student.progress === 0
-      )
+      notStarted: students.filter(
+        (student) =>
+          (selectedMegaCenter === "all" ||
+            student.megaCenterName?.toLowerCase() ===
+              selectedMegaCenter.toLowerCase()) &&
+          student.progress === 0
+      ),
     };
   };
 
@@ -390,6 +398,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
               </TableHead>
               <TableHead>Mega Center</TableHead>
               <TableHead>Completed Sections</TableHead>
+              <TableHead>Contact Number</TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
@@ -430,6 +439,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                   <TableCell>{student.email}</TableCell>
                   <TableCell>{student.megaCenterName || "N/A"}</TableCell>
                   <TableCell>{student.completedSections || 0}</TableCell>
+                  <TableCell>{student.contactNumber || "N/A"}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-20 rounded-full bg-muted">
@@ -487,19 +497,24 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
           <div className="p-10">
             <div className="mb-8 text-center">
               <h1 className="text-2xl font-bold mb-2">
-                Student Progress Report 
+                Student Progress Report
               </h1>
               <h4>Current Course: {course?.title || "N/A"}</h4>
               <p className="text-gray-500">Generated on {today}</p>
               {selectedMegaCenter !== "all" && (
-                <p className="text-gray-500">Mega Center: {selectedMegaCenter}</p>
+                <p className="text-gray-500">
+                  Mega Center: {selectedMegaCenter}
+                </p>
               )}
               <p className="text-gray-500">
-                Total Students: {
-                  (selectedMegaCenter === "all" 
-                    ? students?.length 
-                    : students?.filter(s => s.megaCenterName?.toLowerCase() === selectedMegaCenter.toLowerCase()).length) || 0
-                }
+                Total Students:{" "}
+                {(selectedMegaCenter === "all"
+                  ? students?.length
+                  : students?.filter(
+                      (s) =>
+                        s.megaCenterName?.toLowerCase() ===
+                        selectedMegaCenter.toLowerCase()
+                    ).length) || 0}
               </p>
             </div>
 
@@ -508,7 +523,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
             <div className="status-count">
               Total: {studentsByStatus.completed.length}
             </div>
-            
+
             {studentsByStatus.completed.length > 0 ? (
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
@@ -552,7 +567,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
             <div className="status-count">
               Total: {studentsByStatus.inProgress.length}
             </div>
-            
+
             {studentsByStatus.inProgress.length > 0 ? (
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
@@ -564,6 +579,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                       Completed Sections
                     </th>
                     <th className="border px-4 py-2 text-left">Progress</th>
+                    <th className="">Contact number</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -583,6 +599,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                         {student.completedSections || 0}
                       </td>
                       <td className="border px-4 py-2">{student.progress}%</td>
+                      <td className="">{student.contactNumber}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -596,7 +613,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
             <div className="status-count">
               Total: {studentsByStatus.notStarted.length}
             </div>
-            
+
             {studentsByStatus.notStarted.length > 0 ? (
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
