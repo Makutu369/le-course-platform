@@ -1,4 +1,7 @@
+"use server";
+import { getAllUsersProgressInCourse } from "@/lib/queries/queries";
 import StudentsTable from "../../../(components)/admin/students-table";
+import { Suspense } from "react";
 
 async function CourseUsersPage({
   params,
@@ -6,7 +9,7 @@ async function CourseUsersPage({
   params: Promise<{ courseId?: string }>;
 }) {
   const { courseId } = await params;
-
+  const students = getAllUsersProgressInCourse(courseId ?? "");
   if (!courseId) {
     return <div>Error: Course ID is missing.</div>;
   }
@@ -20,7 +23,9 @@ async function CourseUsersPage({
           </h2>
         </div>
         <div className="space-y-4">
-          <StudentsTable courseId={courseId} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <StudentsTable courseId={courseId} fetchStudents={students} />
+          </Suspense>
         </div>
       </main>
     </div>

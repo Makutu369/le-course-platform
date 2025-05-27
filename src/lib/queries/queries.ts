@@ -303,3 +303,16 @@ export async function addUserPhone(phone: string) {
     throw error;
   }
 }
+
+export async function deleteUserById(props: { id: string; courseId: string }) {
+  const session = await getSession();
+  if (session?.userId === props.id || !session?.userId) {
+    return { error: true, data: "" };
+  }
+
+  await db.delete(users).where(eq(users.id, props.id));
+  console.log("User deleted with id: ", props.id);
+  console.log("courseId is ", props.courseId);
+  revalidatePath(`/admin/course/${props.courseId}`);
+  return { data: "User deleted successfully", error: false };
+}
