@@ -311,8 +311,6 @@ export async function deleteUserById(props: { id: string; courseId: string }) {
   }
 
   await db.delete(users).where(eq(users.id, props.id));
-  console.log("User deleted with id: ", props.id);
-  console.log("courseId is ", props.courseId);
   revalidatePath(`/admin/course/${props.courseId}`);
   return { data: "User deleted successfully", error: false };
 }
