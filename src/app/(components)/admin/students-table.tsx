@@ -462,40 +462,6 @@ export default function StudentsTable({
                 </TableCell>
               </TableRow>
             ))}
-
-            {displayedStudents.map((student, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">
-                  {student.firstName} {student.lastName}
-                </TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.megaCenterName || "N/A"}</TableCell>
-                <TableCell>{student.completedSections || 0}</TableCell>
-                <TableCell>{student.contactNumber || "N/A"}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-20 rounded-full bg-muted">
-                      <div
-                        className={`h-2 rounded-full ${
-                          student.progress === 100
-                            ? "bg-green-500"
-                            : "bg-primary"
-                        }`}
-                        style={{ width: `${student.progress}%` }}
-                      />
-                    </div>
-                    <span>{student.progress}%</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {student.progress === 100 ? (
-                    <CheckIcon className="text-green-500 h-5 w-5" />
-                  ) : (
-                    <XIcon className="text-red-500 h-5 w-5" />
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
           </TableBody>
         </Table>
       </div>
