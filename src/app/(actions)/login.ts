@@ -38,6 +38,7 @@ const signInSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
 });
+
 export const signUp = validatedAction(signUpSchema, async (data) => {
   const { email, password, firstName, lastName } = data;
   return { data, info: "Access to this course is closed" };
@@ -74,7 +75,6 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
 export const signIn = validatedAction(signInSchema, async (data) => {
   const { email, password } = data;
 
-  return { data, info: "Access to this course is closed" };
   const user = await db
     .select({
       user: users,
