@@ -28,13 +28,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { type Student, useStudents } from "../../hooks/use-students";
+
+import { type Student } from "../../hooks/use-students";
 import { getAllMegaCenters } from "@/lib/queries/queries";
 import { findUsersCourse } from "@/lib/queries/queries";
-
+import { ActionMenu } from "./(components)/action-menu";
+import { use } from "react";
 // Main StudentsTable Component
-export default function StudentsTable({ courseId }: { courseId: string }) {
-  const { students, isLoading } = useStudents({ courseId });
+interface StudentsTableProps {
+  fetchStudents: Promise<Student[]>;
+  courseId: string;
+}
+export default function StudentsTable({
+  fetchStudents,
+  courseId,
+}: StudentsTableProps) {
+  const students = use(fetchStudents);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [limit, setLimit] = useState(10);
@@ -46,7 +55,6 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
   const [megaCenter, setMegaCenter] = useState<string[]>([]);
   const printSectionRef = useRef<HTMLDivElement | null>(null);
   const [course, setCourse] = useState<{ title: string } | null>(null);
-
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "2-digit",
@@ -60,6 +68,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
       }
     });
   }, [courseId]);
+
 
   const handlePrint = () => {
     if (printSectionRef.current) {
@@ -158,6 +167,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
 
       setFilteredStudents(filtered);
       setPage(1);
+
     }
   }, [
     students,
@@ -182,6 +192,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
       setSortOrder("asc");
     }
   };
+
 
   // Group students by status for the print view
   const getStudentsByStatus = () => {
@@ -415,21 +426,47 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                 </Button>
               </TableHead>
               <TableHead>Completed</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  Loading...
+            {displayedStudents.map((student, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">
+                  {student.firstName} {student.lastName}
+                </TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>{student.megaCenterName || "N/A"}</TableCell>
+                <TableCell>{student.completedSections || 0}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-20 rounded-full bg-muted">
+                      <div
+                        className={`h-2 rounded-full ${
+                          student.progress === 100
+                            ? "bg-green-500"
+                            : "bg-primary"
+                        }`}
+                        style={{ width: `${student.progress}%` }}
+                      />
+                    </div>
+                    <span>{student.progress}%</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {student.progress === 100 ? (
+                    <CheckIcon className="text-green-500 h-5 w-5" />
+                  ) : (
+                    <XIcon className="text-red-500 h-5 w-5" />
+                  )}
+                </TableCell>
+                <TableCell>
+                  <ActionMenu userId={student.userId} courseId={courseId} />
                 </TableCell>
               </TableRow>
-            ) : displayedStudents.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  No students found.
-                </TableCell>
-              </TableRow>
+
+            ))}
+
             ) : (
               displayedStudents.map((student, index) => (
                 <TableRow key={index}>
@@ -465,6 +502,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                 </TableRow>
               ))
             )}
+
           </TableBody>
         </Table>
       </div>
@@ -579,7 +617,9 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                       Completed Sections
                     </th>
                     <th className="border px-4 py-2 text-left">Progress</th>
+
                     <th className="">Contact number</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -599,7 +639,9 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                         {student.completedSections || 0}
                       </td>
                       <td className="border px-4 py-2">{student.progress}%</td>
+
                       <td className="">{student.contactNumber}</td>
+
                     </tr>
                   ))}
                 </tbody>

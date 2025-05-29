@@ -215,7 +215,9 @@ export async function getAllUsersProgressInCourse(courseId: string) {
         megaCenterName: megaCenters.name,
         completedSections: sql<number>`COUNT(${userSections.sectionId})`,
         completed: sql<boolean>`bool_or(${userCourses.completed})`,
+
         contactNumber: users.phone,
+
       })
       .from(users)
       .innerJoin(userCourses, eq(users.id, userCourses.userId))
@@ -303,4 +305,15 @@ export async function addUserPhone(phone: string) {
     console.error("Error adding user phone:", error);
     throw error;
   }
+}
+
+export async function deleteUserById(props: { id: string; courseId: string }) {
+  const session = await getSession();
+  if (session?.userId === props.id || !session?.userId) {
+    return { error: true, data: "" };
+  }
+
+  await db.delete(users).where(eq(users.id, props.id));
+  revalidatePath(`/admin/course/${props.courseId}`);
+  return { data: "User deleted successfully", error: false };
 }
