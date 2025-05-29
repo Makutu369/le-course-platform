@@ -16,17 +16,23 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     signUp,
     {
+      info: "",
       error: "",
       data: {},
     }
   );
 
-  useEffect(() => {
-    if (!pending && state.error) {
-      toast.error(state.error);
-    }
-  }, [pending, state.error]);
+  // useEffect(() => {
+  //   if (!pending && state.error) {
+  //     toast.error(state.error);
+  //   }
+  // }, [pending, state.error]);
 
+  useEffect(() => {
+    if (state.info || state.data) {
+      toast.info(state.info || "Access to this course is closed");
+    }
+  }, [state.data]);
   return (
     <div className="grid gap-4">
       <Button variant="secondary" className="relative">

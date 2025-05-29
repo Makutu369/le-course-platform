@@ -435,6 +435,7 @@ export default function StudentsTable({
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{student.megaCenterName || "N/A"}</TableCell>
                 <TableCell>{student.completedSections || 0}</TableCell>
+                <TableCell>{student.contactNumber || 0}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-20 rounded-full bg-muted">
