@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+
 import { type Student } from "../../hooks/use-students";
 import { getAllMegaCenters } from "@/lib/queries/queries";
 import { findUsersCourse } from "@/lib/queries/queries";
@@ -67,6 +68,7 @@ export default function StudentsTable({
       }
     });
   }, [courseId]);
+
 
   const handlePrint = () => {
     if (printSectionRef.current) {
@@ -165,6 +167,7 @@ export default function StudentsTable({
 
       setFilteredStudents(filtered);
       setPage(1);
+
     }
   }, [
     students,
@@ -189,6 +192,7 @@ export default function StudentsTable({
       setSortOrder("asc");
     }
   };
+
 
   // Group students by status for the print view
   const getStudentsByStatus = () => {
@@ -405,6 +409,7 @@ export default function StudentsTable({
               </TableHead>
               <TableHead>Mega Center</TableHead>
               <TableHead>Completed Sections</TableHead>
+              <TableHead>Contact Number</TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
@@ -459,7 +464,45 @@ export default function StudentsTable({
                   <ActionMenu userId={student.userId} courseId={courseId} />
                 </TableCell>
               </TableRow>
+
             ))}
+
+            ) : (
+              displayedStudents.map((student, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    {student.firstName} {student.lastName}
+                  </TableCell>
+                  <TableCell>{student.email}</TableCell>
+                  <TableCell>{student.megaCenterName || "N/A"}</TableCell>
+                  <TableCell>{student.completedSections || 0}</TableCell>
+                  <TableCell>{student.contactNumber || "N/A"}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-20 rounded-full bg-muted">
+                        <div
+                          className={`h-2 rounded-full ${
+                            student.progress === 100
+                              ? "bg-green-500"
+                              : "bg-primary"
+                          }`}
+                          style={{ width: `${student.progress}%` }}
+                        />
+                      </div>
+                      <span>{student.progress}%</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {student.progress === 100 ? (
+                      <CheckIcon className="text-green-500 h-5 w-5" />
+                    ) : (
+                      <XIcon className="text-red-500 h-5 w-5" />
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+
           </TableBody>
         </Table>
       </div>
@@ -574,6 +617,9 @@ export default function StudentsTable({
                       Completed Sections
                     </th>
                     <th className="border px-4 py-2 text-left">Progress</th>
+
+                    <th className="">Contact number</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -593,6 +639,9 @@ export default function StudentsTable({
                         {student.completedSections || 0}
                       </td>
                       <td className="border px-4 py-2">{student.progress}%</td>
+
+                      <td className="">{student.contactNumber}</td>
+
                     </tr>
                   ))}
                 </tbody>

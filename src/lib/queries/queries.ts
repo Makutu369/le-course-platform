@@ -215,6 +215,9 @@ export async function getAllUsersProgressInCourse(courseId: string) {
         megaCenterName: megaCenters.name,
         completedSections: sql<number>`COUNT(${userSections.sectionId})`,
         completed: sql<boolean>`bool_or(${userCourses.completed})`,
+
+        contactNumber: users.phone,
+
       })
       .from(users)
       .innerJoin(userCourses, eq(users.id, userCourses.userId))
