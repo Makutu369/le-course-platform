@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { getSession } from "../session";
+import { db } from "@/db";
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
 export async function hashPassword(password: string) {
@@ -20,4 +22,23 @@ export async function comparePassword(
   hashedPassword: string
 ) {
   return bcrypt.compare(plainPassword, hashedPassword);
+}
+
+export async function checkAdditionalInfoAdded() {
+  const currentUser = await getSession();
+  if (!currentUser) return;
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, currentUser.userId),
+    columns: {
+      phone: true,
+      megaCenter: true,
+    },
+  });
+  console.log("User data:", user);
+
+  if (!user) return { error: "unauthorised" };
+  const { megaCenter } = user;
+
+  return megaCenter !== null 
 }
