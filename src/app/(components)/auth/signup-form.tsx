@@ -32,6 +32,7 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     signUp,
     {
+      info: "",
       error: "",
       data: {},
     }
@@ -47,11 +48,10 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
   }
 
   useEffect(() => {
-    if (!pending && state.error) {
+    if (state.error) {
       toast.error(state.error);
     }
-  }, [pending, state.error]);
-
+  }, [state.error]);
   return (
     <div className="grid gap-4">
       <Button variant="secondary" className="relative">

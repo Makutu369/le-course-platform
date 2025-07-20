@@ -1,6 +1,5 @@
-"use client";
 import { getAllUsersProgressInCourse } from "@/lib/queries/queries";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export type Student = {
   progress: number;
