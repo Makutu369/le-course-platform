@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { getSession } from "../session";
+import { db } from "@/db";
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
 export async function hashPassword(password: string) {
