@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,18 +11,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SignInForm } from "./sign-in-form";
-import { SignUpForm } from "./sign-up-form";
+import { SignUpForm } from "./signup-form";
 
-export default function AuthDialog() {
+type MegaCenter = {
+  id: string;
+  name: string;
+};
+
+interface AuthDialogProps {
+  megaCenters: MegaCenter[];
+}
+
+export default function AuthDialog({ megaCenters }: AuthDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="" variant="ghost">
-          Sign In
-        </Button>
+        <Button variant="ghost">Sign In</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -38,7 +45,7 @@ export default function AuthDialog() {
         {mode === "signin" ? (
           <SignInForm onToggleMode={() => setMode("signup")} />
         ) : (
-          <SignUpForm onToggleMode={() => setMode("signin")} />
+          <SignUpForm onToggleMode={() => setMode("signin")} megaCenter={megaCenters} />
         )}
       </DialogContent>
     </Dialog>

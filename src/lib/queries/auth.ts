@@ -21,3 +21,22 @@ export async function comparePassword(
 ) {
   return bcrypt.compare(plainPassword, hashedPassword);
 }
+
+export async function checkAdditionalInfoAdded() {
+  const currentUser = await getSession();
+  if (!currentUser) return;
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, currentUser.userId),
+    columns: {
+      phone: true,
+      megaCenter: true,
+    },
+  });
+  console.log("User data:", user);
+
+  if (!user) return { error: "unauthorised" };
+  const { megaCenter } = user;
+
+  return megaCenter !== null 
+}

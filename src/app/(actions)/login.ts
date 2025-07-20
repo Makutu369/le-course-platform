@@ -18,6 +18,14 @@ const signUpSchema = z
     lastName: z
       .string()
       .min(2, { message: "Last name must be at least 2 characters long" }),
+    phone: z
+  .string()
+  .optional()
+  .refine((val) => !val || /^\d+$/.test(val), {
+    message: "Phone number must contain only digits",
+  }),
+
+    megaCenters: z.string().optional(),
     confirmPassword: z
       .string()
       .min(6, { message: "Password must be at least 6 characters long" }),
@@ -40,8 +48,9 @@ const signInSchema = z.object({
 });
 
 export const signUp = validatedAction(signUpSchema, async (data) => {
-  const { email, password, firstName, lastName } = data;
-  console.log("data is", data);
+  const { email, password, firstName, lastName, phone, megaCenters } = data;
+
+
   if (!email || !password) {
     return { error: "Email and password are required.", data };
   }
@@ -61,8 +70,9 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
     password: passwordHash,
     firstName,
     lastName,
+    phone: phone ? `${phone}` : undefined,
+    megaCenter: megaCenters,
   };
-
   const [createdUser] = await db.insert(users).values(newUser).returning();
 
   if (!createdUser) {
