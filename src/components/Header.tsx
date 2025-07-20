@@ -3,10 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import AuthDialog from "../app/(components)/auth/auth-dialog";
 import { getSession } from "@/lib/session";
 import UserCard from "./ui/user-card";
 import { cn } from "@/lib/utils";
+import AuthDialogWrapper from "@/app/(components)/auth/auth-dialog-wrapper";
 
 async function Header() {
   const session = await getSession();
@@ -40,7 +40,7 @@ async function Header() {
             {session?.userId ? (
               <UserCard userId={session.userId} sessionId={session.id} />
             ) : (
-              <AuthDialog />
+              <AuthDialogWrapper />
             )}
           </div>
         </div>

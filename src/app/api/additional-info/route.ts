@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const userData = await verifyToken(token);
     const userEmail = userData?.user?.email;
 
-    const isAdded = await checkAdditionalInfoAdded(userEmail);
+    const isAdded = await checkAdditionalInfoAdded();
 
     return NextResponse.json({ isAdded }, { status: 200 });
   } catch (error) {
