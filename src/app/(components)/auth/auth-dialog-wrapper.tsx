@@ -1,4 +1,4 @@
-
+"use server";
 import { getAllMegaCenters } from "@/lib/queries/queries";
 import AuthDialog from "./auth-dialog";
 

@@ -108,7 +108,6 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
         <div className="space-y-2">
           <div className="flex items-center space-x-2 mb-1.5">
             <Label htmlFor="phone">Phone</Label>
-
           </div>
           <div className="relative">
             <Input
@@ -136,25 +135,24 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
               Mega Church (MC)
             </Label>
           </div>
-         <Select
-  value={megaChurch}
-  onValueChange={(value) => setMegaChurch(value)}
-  required
->
-  <SelectTrigger className="...">
-    <SelectValue placeholder="Select your Mega Church" />
-  </SelectTrigger>
-  <SelectContent>
-    {megaCenter.map((mc) => (
-      <SelectItem key={mc.id} value={mc.id}>
-        {mc.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+          <Select
+            value={megaChurch}
+            onValueChange={(value) => setMegaChurch(value)}
+            required
+          >
+            <SelectTrigger className="...">
+              <SelectValue placeholder="Select your Mega Church" />
+            </SelectTrigger>
+            <SelectContent>
+              {megaCenter.map((mc) => (
+                <SelectItem key={mc.id} value={mc.id}>
+                  {mc.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-<input type="hidden" name="megaCenters" value={megaChurch} />
-
+          <input type="hidden" name="megaCenters" value={megaChurch} />
         </div>
 
         <div className="grid gap-2 my-2">
