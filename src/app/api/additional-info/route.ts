@@ -1,4 +1,3 @@
-import { verifyToken } from "@/lib/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -11,8 +10,6 @@ export async function GET(req: NextRequest) {
       console.log("Session cookie not found. User is not authenticated.");
       return NextResponse.json({ isNotAuthenticated }, { status: 200 });
     }
-
-    const token = sessionCookie.value;
 
     const isAdded = await checkAdditionalInfoAdded();
 
