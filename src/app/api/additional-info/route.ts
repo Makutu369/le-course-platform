@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
 
     const token = sessionCookie.value;
     const userData = await verifyToken(token);
-    const userEmail = userData?.user?.email;
 
     const isAdded = await checkAdditionalInfoAdded();
 
