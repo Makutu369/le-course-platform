@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
     }
 
     const token = sessionCookie.value;
-    const userData = await verifyToken(token);
 
     const isAdded = await checkAdditionalInfoAdded();
 
