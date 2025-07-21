@@ -12,8 +12,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ isNotAuthenticated }, { status: 200 });
     }
 
-    const token = sessionCookie.value;
-
 
     const isAdded = await checkAdditionalInfoAdded();
 
