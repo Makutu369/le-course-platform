@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -10,6 +11,7 @@ export async function GET(req: NextRequest) {
       console.log("Session cookie not found. User is not authenticated.");
       return NextResponse.json({ isNotAuthenticated }, { status: 200 });
     }
+
 
     const isAdded = await checkAdditionalInfoAdded();
 
