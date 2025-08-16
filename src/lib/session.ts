@@ -6,9 +6,9 @@ import { UAParser } from "ua-parser-js";
 import { SessionData, signToken, verifyToken } from "./jwt";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { db } from "@/db";
 
 export async function setSession(user: User) {
-  const { db } = await import("@/db");
   const expiresInOneDay = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const session: SessionData = {
     user: { id: user.id, role: user.role, email: user.email },
@@ -61,6 +61,7 @@ export async function setSession(user: User) {
     secure: true,
     sameSite: "lax",
   });
+  console.log("done");
 }
 
 export async function getSession() {

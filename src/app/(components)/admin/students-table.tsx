@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { type Student, useStudents } from "../../hooks/use-students";
 import { getAllMegaCenters } from "@/lib/queries/queries";
 import { findUsersCourse } from "@/lib/queries/queries";
+import { ActionMenu } from "./(components)/action-menu";
 
 // Main StudentsTable Component
 export default function StudentsTable({ courseId }: { courseId: string }) {
@@ -434,6 +435,7 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                   <TableCell>{student.email}</TableCell>
                   <TableCell>{student.megaCenterName || "N/A"}</TableCell>
                   <TableCell>{student.completedSections || 0}</TableCell>
+                  <TableCell>{student.contactNumber || 0}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-20 rounded-full bg-muted">
@@ -456,7 +458,13 @@ export default function StudentsTable({ courseId }: { courseId: string }) {
                       <XIcon className="text-red-500 h-5 w-5" />
                     )}
                   </TableCell>
-                  <TableCell>Action buttons here</TableCell>
+                  <TableCell>
+                    {" "}
+                    <ActionMenu
+                      courseId={courseId}
+                      userId={student.userId}
+                    />{" "}
+                  </TableCell>
                 </TableRow>
               ))
             )}

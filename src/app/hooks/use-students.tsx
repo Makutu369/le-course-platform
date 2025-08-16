@@ -11,6 +11,7 @@ export type Student = {
   completed: boolean;
   courseCompleted: boolean;
   megaCenterName: string | null;
+  contactNumber: string | null;
 };
 
 type UseStudentsProps = {
@@ -28,7 +29,6 @@ export function useStudents({ courseId }: UseStudentsProps) {
         const enrolledUsersWithProgress = await getAllUsersProgressInCourse(
           courseId
         );
-        console.log("Enrolled Users with Progress:", enrolledUsersWithProgress);
         setStudents(enrolledUsersWithProgress);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -39,6 +39,5 @@ export function useStudents({ courseId }: UseStudentsProps) {
 
     fetchStudents();
   }, [courseId]);
-
   return { students, isLoading };
 }

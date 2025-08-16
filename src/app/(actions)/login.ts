@@ -4,8 +4,8 @@ import { validatedAction } from "@/lib/middleware";
 import { comparaPassword, hashPassword, setSession } from "@/lib/session";
 import { db } from "@/db";
 import { NewUser, users } from "@/db/schema";
+import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-
 const signUpSchema = z
   .object({
     email: z.string({ invalid_type_error: "Invalid Email" }).email(),
@@ -83,7 +83,7 @@ export const signUp = validatedAction(signUpSchema, async (data) => {
 
 export const signIn = validatedAction(signInSchema, async (data) => {
   const { email, password } = data;
-
+  console.log("Signing in user:", email);
   const user = await db
     .select({
       user: users,
@@ -95,6 +95,7 @@ export const signIn = validatedAction(signInSchema, async (data) => {
   if (user.length === 0 || !user[0]?.user) {
     return { error: "Invalid username or password. Please try again.", data };
   }
+  console.log("Found user:", user[0].user.email);
 
   const { user: foundUser } = user[0];
 
@@ -107,5 +108,5 @@ export const signIn = validatedAction(signInSchema, async (data) => {
     return { error: "Invalid username or password. Please try again.", data };
   }
   await setSession(foundUser);
-  return { success: true };
+  console.log("User signed in successfully:", foundUser.email);
 });
