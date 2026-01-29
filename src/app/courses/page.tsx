@@ -8,10 +8,12 @@ export default async function Page() {
   const [session, courses] = await Promise.all([getSession(), getCourses()]);
 
   return (
-    <div className=" h-[cal(100vh-65px)] flex flex-col gap-y-5 px-6 sm:px-9 lg:px-12 w-full bg-background">
-      <div className="w-full flex justify-between items-center"></div>
-      <div className="flex-1 py-6">
-        <div className="w-full h-full grid grid-cols-1 md:grid-cols-3">
+    <div className="min-h-screen flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8 w-full bg-background py-8">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="text-3xl font-bold tracking-tight">Available Courses</h1>
+      </div>
+      <div className="flex-1">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
           {courses.map((course) => (
             <div key={course.id}>
               <CourseCard {...course} userId={session?.userId} />

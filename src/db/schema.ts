@@ -263,5 +263,3 @@ export type NewuserCourseSections = typeof userSections.$inferInsert;
 export type MegaCenter = typeof megaCenters.$inferSelect;
 
 export type NewMegaCenter = typeof megaCenters.$inferInsert;
-
-

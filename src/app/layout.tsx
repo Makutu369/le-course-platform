@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "Access all love economy courses from this page",
 };
 
+import MobileNav from "@/components/mobile-nav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,9 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} antialiased pb-16 md:pb-0`}>
         <Header />
         {children}
+        <MobileNav />
         <Toaster richColors />
       </body>
     </html>

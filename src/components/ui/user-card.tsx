@@ -1,7 +1,6 @@
 "use server";
 import React from "react";
-import { Avatar } from "@radix-ui/react-avatar";
-import { AvatarFallback, AvatarImage } from "./avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { getUser } from "@/lib/queries/queries";
 import {
   DropdownMenu,
@@ -22,16 +21,16 @@ async function UserCard(props: { userId: string; sessionId: string }) {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="w-32 flex items-center gap-x-4">
-            <Avatar>
-              <AvatarImage src={user?.profilePicture ?? ""} alt="@shadcn" />
-              <AvatarFallback className="size-9">
-                {user?.lastName?.charAt(0)}
+        <DropdownMenuTrigger className="outline-none">
+          <div className="flex items-center gap-x-3 cursor-pointer">
+            <Avatar className="h-9 w-9 border border-border">
+              <AvatarImage src={user?.profilePicture ?? ""} alt={user?.firstName ?? "User"} />
+              <AvatarFallback>
+                {user?.lastName?.charAt(0) ?? user?.firstName?.charAt(0) ?? "U"}
               </AvatarFallback>
             </Avatar>
-            <div className="text-sm font-medium">
-              {user?.lastName} {isAdmin && <span className="text-red-500">(Admin)</span>}
+            <div className="text-sm font-medium hidden sm:block">
+              {user?.firstName} {isAdmin && <span className="text-red-500 text-xs ml-1">(Admin)</span>}
             </div>
           </div>
         </DropdownMenuTrigger>

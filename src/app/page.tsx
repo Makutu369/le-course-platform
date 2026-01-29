@@ -32,12 +32,13 @@ export default async function Home() {
             <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Love Economy Church training platform
+                  <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl xl:text-7xl/none bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
+                    Love Economy Church
+                    <br />
+                    Training Platform
                   </h1>
-                  <p className="mx-auto max-w-[600px] text-xl text-white/85">
-                    Access educational programs and spiritual development
-                    courses
+                  <p className="mx-auto max-w-[600px] text-lg sm:text-xl text-zinc-200 font-medium">
+                    Access educational programs and spiritual development courses designed for your growth
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
@@ -68,10 +69,11 @@ export default async function Home() {
                 <Link
                   key={category}
                   href="#"
-                  className="group relative overflow-hidden rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
+                  className="group relative overflow-hidden rounded-2xl border bg-card p-8 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                 >
-                  <h3 className="font-semibold text-lg mb-2">{category}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <h3 className="font-bold text-xl mb-3 group-hover:text-primary transition-colors relative z-10">{category}</h3>
+                  <p className="text-sm text-muted-foreground relative z-10">
                     Starting next session
                   </p>
                 </Link>
@@ -94,27 +96,27 @@ export default async function Home() {
               </div>
             </div>
             <div className="mx-auto grid items-center gap-8 py-12 lg:grid-cols-3">
-              <div className="flex flex-col items-center space-y-4 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <div className="flex flex-col items-center space-y-4 text-center p-6 rounded-2xl bg-secondary/20">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-2">
                   <PrayingHands className="h-8 w-8" />
                 </div>
                 <h3 className="text-xl font-bold">Spiritual Growth</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Deepen your faith through structured learning and reflection
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <div className="flex flex-col items-center space-y-4 text-center p-6 rounded-2xl bg-secondary/20">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-2">
                   <Users className="h-8 w-8" />
                 </div>
                 <h3 className="text-xl font-bold">Community Learning</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Learn alongside fellow church members in a supportive
                   environment
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <div className="flex flex-col items-center space-y-4 text-center p-6 rounded-2xl bg-secondary/20">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-2">
                   <Heart className="h-8 w-8" />
                 </div>
                 <h3 className="text-xl font-bold">Personal Guidance</h3>
@@ -162,7 +164,7 @@ export default async function Home() {
               ].map((testimonial, i) => (
                 <div
                   key={i}
-                  className="flex flex-col justify-between space-y-4 rounded-xl border p-6 shadow-sm"
+                  className="flex flex-col justify-between space-y-4 rounded-2xl border bg-card p-8 shadow-sm hover:shadow-lg transition-all duration-300"
                 >
                   <p className="text-muted-foreground italic">
                     {testimonial.quote}

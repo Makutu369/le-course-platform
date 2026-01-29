@@ -272,8 +272,7 @@ export async function checkAdditionalInfoAdded() {
 }
 
 export async function getAllMegaCenters() {
-  const centers = await db.query.megaCenters.findMany();
-
+  const centers = await db.select().from(megaCenters);
   return centers;
 }
 
