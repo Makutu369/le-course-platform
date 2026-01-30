@@ -36,9 +36,8 @@ export default function HLSVideoPlayer({
   const [isCompleted, setIsCompleted] = useState(false);
   const playerContainerRef = useRef<HTMLDivElement>(null);
 
-  const storageKey = `video-progress-${courseId ? courseId + "-" : ""}${
-    section?.id
-  }`;
+  const storageKey = `video-progress-${courseId ? courseId + "-" : ""}${section?.id
+    }`;
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -165,11 +164,12 @@ export default function HLSVideoPlayer({
   return (
     <div
       ref={playerContainerRef}
-      className="relative w-full bg-black  overflow-hidden"
+      className="relative w-full h-full bg-black overflow-hidden flex items-center justify-center group"
     >
-      <div className="absolute top-0 left-0 right-0 p-4 z-10 bg-gradient-to-b from-black/70 to-transparent">
-        <h3 className="text-white font-medium">{section?.title}</h3>
+      <div className="absolute top-0 left-0 right-0 p-6 z-10 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300">
+        <h3 className="text-white font-semibold text-lg drop-shadow-md">{section?.title}</h3>
       </div>
+
       <ReactHlsPlayer
         src={section?.videoUrl ?? ""}
         autoPlay={false}
@@ -178,56 +178,61 @@ export default function HLSVideoPlayer({
         height="auto"
         playerRef={playerRef as React.RefObject<HTMLVideoElement>}
         muted={muted}
-        className="w-full aspect-video"
+        className="w-full max-h-full object-contain"
         onEnded={() => {
           if (!isCompleted) {
             setIsCompleted(true);
           }
         }}
       />
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-6 pt-12">
         {/* Progress bar */}
         <div
           ref={progressBarRef}
-          className="w-full h-1 bg-gray-600 rounded-full mb-4 cursor-pointer"
+          className="w-full h-1.5 bg-white/10 rounded-full mb-6 cursor-pointer relative group/progress"
           onClick={handleProgressBarClick}
         >
           <div
-            className="h-full bg-white rounded-full"
+            className="h-full bg-primary rounded-full relative shadow-[0_0_10px_rgba(168,85,247,0.8)]"
             style={{ width: `${progress}%` }}
-          />
+          >
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full scale-0 group-hover/progress:scale-100 transition-transform shadow-lg" />
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <button
               onClick={togglePlay}
-              className="text-white hover:text-gray-300 transition"
+              className="text-white hover:text-primary transition-all transform active:scale-90"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
-              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+              {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
             </button>
 
             <button
               onClick={seekBackward}
-              className="text-white hover:text-gray-300 transition"
+              className="text-white/80 hover:text-white transition-all transform active:rotate-[-45deg]"
               aria-label={`Rewind ${backwardSeekSeconds} seconds`}
             >
-              <RotateCcw size={20} />
+              <RotateCcw size={22} />
             </button>
 
-            <div className="text-white text-sm">
-              {formatTime(currentTime)} / {formatTime(duration)}
+            <div className="text-white/90 text-sm font-mono tracking-tighter">
+              {formatTime(currentTime)} <span className="text-white/30 mx-1">/</span> {formatTime(duration)}
             </div>
           </div>
 
-          <button
-            onClick={toggleFullscreen}
-            className="text-white hover:text-gray-300 transition"
-            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-          >
-            {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleFullscreen}
+              className="text-white/80 hover:text-white transition-all transform hover:scale-110"
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? <Minimize size={22} /> : <Maximize size={22} />}
+            </button>
+          </div>
         </div>
         <CompletionDialog
           open={isCompleted}

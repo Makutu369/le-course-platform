@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased pb-16 md:pb-0`}>
+      <body className={`${inter.className} dark antialiased pb-16 md:pb-0`}>
         <Header />
         {children}
         <MobileNav />

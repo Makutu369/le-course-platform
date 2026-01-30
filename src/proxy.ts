@@ -10,7 +10,7 @@ async function _verifySession(req: NextRequest) {
   return await verifyToken(sessionCookie.value);
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isPublicRoute = publicRoutes.includes(path);
 
@@ -69,7 +69,7 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Define Middleware Matchers
+// Define Proxy Matchers
 export const config = {
   matcher: ["/courses", "/courses/:path*", "/admin/:path*"],
 };
