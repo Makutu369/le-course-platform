@@ -31,10 +31,7 @@ export default async function Home() {
           <div className="relative z-10 flex h-[55vh] md:min-h-[70vh] lg:min-h-[85vh] items-center text-white">
             <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col items-start space-y-6 max-w-3xl">
-                <div className="inline-flex items-center gap-2 border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
-                  <span className="w-2 h-2 bg-primary animate-pulse" />
-                  Spiritual Growth Platform
-                </div>
+
                 <div className="space-y-4">
                   <h1 className="text-4xl font-black tracking-tight sm:text-6xl xl:text-7xl leading-[0.9]">
                     Love Economy
@@ -49,7 +46,7 @@ export default async function Home() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <StartButton />
-                  <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 hover:text-white">
+                  <Button variant="outline" size="lg" className="border-white/20 text-black hover:bg-white/10 hover:text-white">
                     <Link href="/courses" className="flex items-center gap-2">
                       Browse Courses
                       <ArrowRight className="h-4 w-4" />

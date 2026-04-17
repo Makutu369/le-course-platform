@@ -251,21 +251,8 @@ export async function getAllUsersProgressInCourse(courseId: string) {
 
 export async function checkAdditionalInfoAdded() {
   const currentUser = await getSession();
-  if (!currentUser) return;
-
-  const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.id, currentUser.userId),
-    columns: {
-      phone: true,
-      megaCenter: true,
-    },
-  });
-
-  if (!user) return { error: "unauthorised" };
-  const { megaCenter } = user;
-
-  if (!megaCenter) {
-    redirect("/student-info");
+  if (!currentUser) {
+    return { error: "Please sign in to continue" };
   }
 
   redirect("/courses");

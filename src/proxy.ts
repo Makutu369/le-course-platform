@@ -51,21 +51,6 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
-  const res = await fetch(`${req.nextUrl.origin}/api/additional-info`, {
-    headers: {
-      Cookie: req.headers.get("cookie") || "",
-    },
-  });
-
-  const data = await res.json();
-  console.log("Response from additional-info API:", data);
-  if (data.isNotAuthenticated) {
-    return NextResponse.next();
-  }
-  if (!data.isAdded) {
-    return NextResponse.redirect(new URL("/student-info", req.url));
-  }
-
   return NextResponse.next();
 }
 

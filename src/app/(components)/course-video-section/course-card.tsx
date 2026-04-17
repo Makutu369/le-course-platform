@@ -2,7 +2,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { accessCourse } from "@/lib/queries/queries";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import { useTransition } from "react";
 
 // Update the interface to match the database schema
 interface CourseCardProps {
@@ -22,13 +23,25 @@ export default function CourseCard({
   price,
   userId,
 }: CourseCardProps) {
+  const [isPending, startTransition] = useTransition();
   const formatPrice = (price: number) => `GHC${(price / 100).toFixed(2)}`;
+
+  const handleAccess = () => {
+    startTransition(async () => {
+      await accessCourse({ courseId: id, userId: userId ?? "" });
+    });
+  };
 
   return (
     <Card
-      className="group overflow-hidden hover:cursor-pointer transition-all duration-300 hover:border-primary/50 bg-card"
-      onClick={() => accessCourse({ courseId: id, userId: userId ?? "" })}
+      className="group overflow-hidden hover:cursor-pointer transition-all duration-300 hover:border-primary/50 bg-card relative"
+      onClick={handleAccess}
     >
+      {isPending && (
+        <div className="absolute inset-0 z-50 bg-background/60 backdrop-blur-sm flex items-center justify-center">
+          <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        </div>
+      )}
       <div className="relative aspect-[16/10] overflow-hidden">
         <Image
           src={imageUrl || "/placeholder.svg?height=480&width=640"}
@@ -57,8 +70,8 @@ export default function CourseCard({
           {price ? (
             <span className="font-bold text-primary text-sm">{formatPrice(price)}</span>
           ) : (
-            <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1 uppercase tracking-wider">
-              Free Access
+            <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 rounded-full px-3 py-1 uppercase tracking-wider">
+              Available
             </span>
           )}
         </div>

@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { Suspense } from "react";
 import MobileNav from "@/components/mobile-nav";
+import TopLoader from "@/components/top-loader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,6 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased pb-16 md:pb-0`}>
+        <Suspense fallback={null}>
+          <TopLoader />
+        </Suspense>
         <Suspense fallback={<div className="h-16 w-full border-b animate-pulse" />}>
           <Header />
         </Suspense>

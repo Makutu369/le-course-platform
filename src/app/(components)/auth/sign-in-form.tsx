@@ -28,7 +28,8 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
 
   useEffect(() => {
     if (signInState.success) {
-      router.push("courses");
+      router.push("/courses");
+      router.refresh();
     }
   }, [signInState.success, router]);
   return (
