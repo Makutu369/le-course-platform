@@ -63,53 +63,55 @@ export default function StudentInfoForm({
   };
 
   return (
-    <div className="min-h-screen  py-12">
+    <div className="min-h-screen py-12">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-16">
           <div className="w-full max-w-2xl hidden md:block">
-            <div className="relative rounded-xl overflow-hidden">
+            <div className="relative overflow-hidden border-2 border-border">
               <Image
                 src="/learning.png"
                 alt="Student studying"
                 width={700}
                 height={600}
-                className="object-cover transition-transform hover:scale-105 duration-700"
+                className="object-cover"
                 priority
               />
-              <div className="absolute   to-transparent flex items-end">
-                <div className="p-8 text-white">
-                  <h2 className="text-3xl font-bold mb-3">
-                    Welcome to Your Learning Journey
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent flex items-end">
+                <div className="p-10 text-foreground">
+                  <h2 className="text-3xl font-black mb-3 tracking-tight leading-tight">
+                    Welcome to Your
+                    <br />
+                    Learning Journey
                   </h2>
-                  <p className="text-base opacity-90 max-w-md">
-                    Complete your profile to access all courses and learning
-                    resources
+                  <p className="text-sm text-muted-foreground/80 max-w-md leading-relaxed">
+                    Complete your profile to access all courses and spiritual development resources.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <Card className="w-full max-w-md border border-slate-200 dark:border-slate-700 shadow-xs bg-white dark:bg-slate-900 transition-all duration-300 hover:shadow-xs">
-            <CardHeader className="space-y-3 pb-6">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mx-auto mb-3">
+          <Card className="w-full max-w-md border-2 border-border bg-card overflow-hidden">
+            <CardHeader className="space-y-4 pb-8 pt-10">
+              <div className="flex items-center justify-center w-16 h-16 bg-primary/10 mx-auto mb-2">
                 <Church className="h-8 w-8 text-primary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-center">
-                Student Information
-              </CardTitle>
-              <CardDescription className="text-center text-slate-500 dark:text-slate-400">
-                Please provide your contact number and Mega Church (MC) before
-                continuing
-              </CardDescription>
+              <div className="space-y-2">
+                <CardTitle className="text-2xl font-black text-center tracking-tight">
+                  Student Info
+                </CardTitle>
+                <CardDescription className="text-center text-muted-foreground/70 text-sm leading-relaxed px-4">
+                  Please provide your contact details to personalize your experience.
+                </CardDescription>
+              </div>
             </CardHeader>
 
             <form onSubmit={handleSubmit}>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 px-8">
                 <div className="space-y-2">
-                  <div className="flex items-center space-x-2 mb-1.5">
+                  <div className="flex items-center space-x-2">
                     <Phone className="h-4 w-4 text-primary" />
-                    <Label htmlFor="contact" className="font-medium">
+                    <Label htmlFor="contact" className="font-semibold text-xs uppercase tracking-wider">
                       Contact Number
                     </Label>
                   </div>
@@ -121,22 +123,22 @@ export default function StudentInfoForm({
                       value={contact}
                       onChange={handlePhoneChange}
                       placeholder="0542349303"
-                      className="pl-20 transition-all border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
+                      className="pl-20 h-12"
                       required
                     />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold text-sm">
                       +233
                     </div>
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Enter your 10-digit phone number
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/50 px-1">
+                    10-digit ghanaian number
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center space-x-2 mb-1.5">
+                  <div className="flex items-center space-x-2">
                     <Church className="h-4 w-4 text-primary" />
-                    <Label htmlFor="megaChurch" className="font-medium">
+                    <Label htmlFor="megaChurch" className="font-semibold text-xs uppercase tracking-wider">
                       Mega Church (MC)
                     </Label>
                   </div>
@@ -146,7 +148,7 @@ export default function StudentInfoForm({
                     onValueChange={(value) => setMegaChurch(value)}
                     required
                   >
-                    <SelectTrigger className="transition-all border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/20">
+                    <SelectTrigger className="h-12">
                       <SelectValue placeholder="Select your Mega Church" />
                     </SelectTrigger>
                     <SelectContent>
@@ -160,20 +162,20 @@ export default function StudentInfoForm({
                 </div>
               </CardContent>
 
-              <CardFooter className="flex flex-col gap-4 pt-2">
+              <CardFooter className="px-8 pb-10 pt-4">
                 <Button
                   type="submit"
-                  className="w-full group h-11 transition-all"
+                  className="w-full h-12 text-sm font-bold group"
                   disabled={isLoading || !contact || !megaChurch}
                 >
                   {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
+                    <span className="flex items-center justify-center gap-3">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Saving Profile...
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
-                      Continue
+                      Start Learning
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
                   )}

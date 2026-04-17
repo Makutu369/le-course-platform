@@ -33,24 +33,24 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
   }, [signInState.success, router]);
   return (
     <div className="grid gap-4">
-      <Button variant="secondary" className="relative">
+      <Button variant="secondary" className="relative h-11">
         <GoogleIcon />
         Sign in with Google
       </Button>
       <form>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
+            <span className="w-full border-t-2 border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-background px-3 text-muted-foreground font-semibold tracking-wider">
               Or continue with
             </span>
           </div>
         </div>
-        <div className="w-full h-full flex-col flex gap-y-3">
-          <div className="grid gap-2 ">
-            <Label htmlFor="email">Email</Label>
+        <div className="w-full h-full flex-col flex gap-y-4 mt-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email" className="font-semibold text-xs uppercase tracking-wider">Email</Label>
             <Input
               id="email"
               type="email"
@@ -60,22 +60,22 @@ export function SignInForm({ onToggleMode }: SignInFormProps) {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="font-semibold text-xs uppercase tracking-wider">Password</Label>
             <PasswordInput
               id="password"
               name="password"
               defaultValue={signInState.data?.password}
             />
           </div>
-          <Button type="submit" formAction={signInFormActions}>
+          <Button type="submit" formAction={signInFormActions} className="h-11 mt-1">
             {signInPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <p>Sign In</p>
           </Button>
         </div>
       </form>
-      <div className="text-center text-sm">
+      <div className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <button onClick={onToggleMode} className="underline hover:text-primary">
+        <button onClick={onToggleMode} className="font-semibold text-primary hover:underline">
           Sign up
         </button>
       </div>

@@ -26,12 +26,12 @@ export default function AuthDialog({ centers }: AuthDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost">Sign In</Button>
+        <Button variant="outline" size="sm" className="border-2">Sign In</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === "signin" ? "Sign In" : "Create an Account"}
+            {mode === "signin" ? "Sign In" : "Create Account"}
           </DialogTitle>
           <DialogDescription>
             {mode === "signin"

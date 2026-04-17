@@ -13,25 +13,24 @@ async function Header() {
   return (
     <header
       className={cn(
-        " w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        { "sticky top-0 z-50": !session?.id }
+        "w-full border-b-2 border-border bg-background/90 backdrop-blur-xl sticky top-0 z-50"
       )}
     >
-      <div className="w-full tracking-tight mx-auto px-2 sm:px-6 lg:px-12 xl:px-16  flex h-16 items-center justify-between">
+      <div className="w-full tracking-tight mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo-black.png" alt="" width={150} height={50} />
+          <Image src="/logo-black.png" alt="" width={140} height={46} />
         </Link>
-        <div className="flex items-center gap-x-14">
-          <div className="hidden gap-6 md:flex">
+        <div className="flex items-center gap-x-8">
+          <div className="hidden gap-8 md:flex">
             <Link
               href="/courses"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary uppercase tracking-wider"
             >
-              courses
+              Courses
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary uppercase tracking-wider"
             >
               Resources
             </Link>

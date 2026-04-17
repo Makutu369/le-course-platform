@@ -53,12 +53,12 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
     }
   }, [state.error]);
   return (
-    <div className="grid gap-y-1">
-      <form className="flex flex-col gap-y-1">
-        <div className="grid gap-y-1">
+    <div className="grid gap-y-2">
+      <form className="flex flex-col gap-y-2">
+        <div className="grid gap-y-2">
           <div className="flex gap-4">
-            <div className="grid gap-2 my-2">
-              <Label htmlFor="firstName">First Name</Label>
+            <div className="grid gap-2 flex-1">
+              <Label htmlFor="firstName" className="font-semibold text-xs uppercase tracking-wider">First Name</Label>
               <Input
                 id="firstName"
                 name="firstName"
@@ -67,8 +67,8 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
                 defaultValue={state.data?.firstName}
               />
             </div>
-            <div className="grid gap-2 my-2">
-              <Label htmlFor="lastName">Last Name</Label>
+            <div className="grid gap-2 flex-1">
+              <Label htmlFor="lastName" className="font-semibold text-xs uppercase tracking-wider">Last Name</Label>
               <Input
                 id="lastName"
                 name="lastName"
@@ -80,8 +80,8 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
           </div>
         </div>
 
-        <div className="grid gap-2 my-2">
-          <Label htmlFor="email">Email</Label>
+        <div className="grid gap-2 my-1">
+          <Label htmlFor="email" className="font-semibold text-xs uppercase tracking-wider">Email</Label>
           <Input
             id="email"
             name="email"
@@ -91,10 +91,8 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
           />
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2 mb-1.5">
-            <Label htmlFor="phone">Phone</Label>
-          </div>
+        <div className="space-y-2 my-1">
+          <Label htmlFor="phone" className="font-semibold text-xs uppercase tracking-wider">Phone</Label>
           <div className="relative">
             <Input
               id="phone"
@@ -103,30 +101,28 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
               value={contact}
               onChange={handlePhoneChange}
               placeholder="0542349303"
-              className="pl-20 transition-all border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
+              className="pl-20"
               required
             />
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold text-sm">
               +233
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Enter your 10-digit phone number
+          <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/50 px-1">
+            10-digit ghanaian number
           </p>
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2 mb-1.5">
-            <Label htmlFor="megaChurch" className="font-medium">
-              Mega Church (MC)
-            </Label>
-          </div>
+        <div className="space-y-2 my-1">
+          <Label htmlFor="megaChurch" className="font-semibold text-xs uppercase tracking-wider">
+            Mega Church (MC)
+          </Label>
           <Select
             value={megaChurch}
             onValueChange={(value) => setMegaChurch(value)}
             required
           >
-            <SelectTrigger className="...">
+            <SelectTrigger>
               <SelectValue placeholder="Select your Mega Church" />
             </SelectTrigger>
             <SelectContent>
@@ -141,24 +137,24 @@ export function SignUpForm({ onToggleMode, megaCenter }: SignUpFormProps) {
           <input type="hidden" name="megaCenters" value={megaChurch} />
         </div>
 
-        <div className="grid gap-2 my-2">
-          <Label htmlFor="password">Password</Label>
+        <div className="grid gap-2 my-1">
+          <Label htmlFor="password" className="font-semibold text-xs uppercase tracking-wider">Password</Label>
           <PasswordInput id="password" name="password" />
         </div>
-        <div className="grid gap-2 my-2">
-          <Label htmlFor="confirmPassword">Confirm password</Label>
+        <div className="grid gap-2 my-1">
+          <Label htmlFor="confirmPassword" className="font-semibold text-xs uppercase tracking-wider">Confirm Password</Label>
           <PasswordInput id="confirmPassword" name="confirmPassword" />
         </div>
 
-        <Button type="submit" formAction={action} className="mt-3 w-full">
+        <Button type="submit" formAction={action} className="mt-3 w-full h-11">
           {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           <div>Create Account</div>
         </Button>
       </form>
 
-      <div className="text-center text-sm">
+      <div className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <button onClick={onToggleMode} className="underline hover:text-primary">
+        <button onClick={onToggleMode} className="font-semibold text-primary hover:underline">
           Sign in
         </button>
       </div>

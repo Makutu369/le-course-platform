@@ -23,19 +23,19 @@ async function UserCard(props: { userId: string; sessionId: string }) {
       <DropdownMenu>
         <DropdownMenuTrigger className="outline-none">
           <div className="flex items-center gap-x-3 cursor-pointer">
-            <Avatar className="h-9 w-9 border border-border">
+            <Avatar className="h-9 w-9 ">
               <AvatarImage src={user?.profilePicture ?? ""} alt={user?.firstName ?? "User"} />
-              <AvatarFallback>
+              <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm rounded-full">
                 {user?.lastName?.charAt(0) ?? user?.firstName?.charAt(0) ?? "U"}
               </AvatarFallback>
             </Avatar>
-            <div className="text-sm font-medium hidden sm:block">
-              {user?.firstName} {isAdmin && <span className="text-red-500 text-xs ml-1">(Admin)</span>}
+            <div className="text-sm font-semibold hidden sm:block tracking-tight">
+              {user?.firstName} {isAdmin && <span className="text-primary text-[10px] ml-1 uppercase tracking-wider font-bold">Admin</span>}
             </div>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent className="border-2">
+          <DropdownMenuLabel className="font-bold text-xs uppercase tracking-wider">My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {isAdmin && <DropdownMenuItem><Link href={'/admin'}>Admin Panel</Link></DropdownMenuItem>}
           <DropdownMenuItem>Settings</DropdownMenuItem>

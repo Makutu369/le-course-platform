@@ -52,20 +52,25 @@ export function CompletionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
+          <div className="flex items-center justify-center w-14 h-14 bg-primary/10 mx-auto mb-4">
+            <svg className="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
           <DialogTitle className="text-xl">Video Completed</DialogTitle>
           <DialogDescription className="mt-2">
-            Youve completed watching this video. Would you like to mark it as
+            You&apos;ve completed watching this video. Would you like to mark it as
             completed?
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col items-center justify-center py-6">
+        <div className="flex flex-col items-center justify-center py-4">
           {state.error && (
-            <div className="text-center text-destructive text-sm mb-2">
+            <div className="text-center text-destructive text-sm mb-2 font-medium">
               {state.error}
             </div>
           )}
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-xs text-muted-foreground uppercase tracking-wider font-semibold">
             <p>Move to the next session</p>
           </div>
         </div>

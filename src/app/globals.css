@@ -2,11 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -25,40 +23,30 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 265 80% 50%;
-    --radius: 1rem;
+    --radius: 0px;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 265 80% 50%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
+    --card: 240 8% 6%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 8% 6%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 265 85% 60%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 240 5% 55%;
+    --accent: 265 40% 16%;
+    --accent-foreground: 265 85% 75%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 265 80% 50%;
-    --radius: 1rem;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 265 85% 60%;
+    --radius: 0px;
   }
 }
 
@@ -70,4 +58,33 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom selection color */
+::selection {
+  background: hsl(265 85% 60% / 0.3);
+  color: hsl(0 0% 98%);
+}
+
+/* Smooth scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* Focus visible ring for accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }

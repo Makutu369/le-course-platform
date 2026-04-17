@@ -49,39 +49,36 @@ export default function CourseCompletedPage() {
           recycle={false}
           numberOfPieces={200}
           gravity={0.15}
-          colors={["#4F46E5", "#10B981", "#F59E0B", "#EF4444"]}
+          colors={["#7C3AED", "#10B981", "#F59E0B", "#EF4444"]}
         />
       )}
 
-      <div className="w-full max-w-md ">
-        <CardContent className="p-6 md:p-8">
+      <div className="w-full max-w-md border-2 border-border bg-card">
+        <CardContent className="p-8 md:p-10">
           <div className="flex flex-col items-center text-center space-y-6">
-            <div className="relative w-20 h-20 mb-2">
-              <div className="absolute inset-0 rounded-full bg-primary/10"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Trophy className="w-10 h-10 text-primary" />
-              </div>
+            <div className="w-20 h-20 bg-primary/10 flex items-center justify-center">
+              <Trophy className="w-10 h-10 text-primary" />
             </div>
 
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight">
                 Well Done!
               </h1>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-base text-muted-foreground">
                 You have completed the course
               </p>
             </div>
 
             <div className="w-full space-y-2 py-4">
-              <div className="flex justify-between text-sm font-medium">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
                 <span>Course Progress</span>
-                <span>100% Complete</span>
+                <span className="text-primary">100% Complete</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
 
             <div className="pt-4 w-full">
-              <Button variant="ghost" className="w-full" asChild>
+              <Button variant="outline" className="w-full border-2" asChild>
                 <Link href="/courses">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Dashboard

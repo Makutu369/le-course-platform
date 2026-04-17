@@ -166,8 +166,11 @@ export default function HLSVideoPlayer({
       ref={playerContainerRef}
       className="relative w-full h-full bg-black overflow-hidden flex items-center justify-center group"
     >
-      <div className="absolute top-0 left-0 right-0 p-6 z-10 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300">
-        <h3 className="text-white font-semibold text-lg drop-shadow-md">{section?.title}</h3>
+      <div className="absolute top-0 left-0 right-0 p-5 z-10 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300">
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-5 bg-primary" />
+          <h3 className="text-white font-bold text-sm uppercase tracking-wider">{section?.title}</h3>
+        </div>
       </div>
 
       <ReactHlsPlayer
@@ -186,40 +189,40 @@ export default function HLSVideoPlayer({
         }}
       />
 
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-6 pt-12">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 pt-12">
         {/* Progress bar */}
         <div
           ref={progressBarRef}
-          className="w-full h-1.5 bg-white/10 rounded-full mb-6 cursor-pointer relative group/progress"
+          className="w-full h-1 bg-white/10 mb-5 cursor-pointer relative group/progress"
           onClick={handleProgressBarClick}
         >
           <div
-            className="h-full bg-primary rounded-full relative shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+            className="h-full bg-primary relative"
             style={{ width: `${progress}%` }}
           >
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full scale-0 group-hover/progress:scale-100 transition-transform shadow-lg" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white scale-0 group-hover/progress:scale-100 transition-transform" />
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
             <button
               onClick={togglePlay}
-              className="text-white hover:text-primary transition-all transform active:scale-90"
+              className="text-white hover:text-primary transition-all active:scale-90"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
-              {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
+              {isPlaying ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}
             </button>
 
             <button
               onClick={seekBackward}
-              className="text-white/80 hover:text-white transition-all transform active:rotate-[-45deg]"
+              className="text-white/70 hover:text-white transition-all active:rotate-[-45deg]"
               aria-label={`Rewind ${backwardSeekSeconds} seconds`}
             >
-              <RotateCcw size={22} />
+              <RotateCcw size={20} />
             </button>
 
-            <div className="text-white/90 text-sm font-mono tracking-tighter">
+            <div className="text-white/80 text-xs font-mono tracking-tight">
               {formatTime(currentTime)} <span className="text-white/30 mx-1">/</span> {formatTime(duration)}
             </div>
           </div>
@@ -227,10 +230,10 @@ export default function HLSVideoPlayer({
           <div className="flex items-center gap-4">
             <button
               onClick={toggleFullscreen}
-              className="text-white/80 hover:text-white transition-all transform hover:scale-110"
+              className="text-white/70 hover:text-white transition-all hover:scale-110"
               aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
             >
-              {isFullscreen ? <Minimize size={22} /> : <Maximize size={22} />}
+              {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
             </button>
           </div>
         </div>

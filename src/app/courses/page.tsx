@@ -8,9 +8,13 @@ export default async function Page() {
   const [session, courses] = await Promise.all([getSession(), getCourses()]);
 
   return (
-    <div className="min-h-screen flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8 w-full bg-background py-8">
-      <div className="w-full flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Available Courses</h1>
+    <div className="min-h-screen flex flex-col gap-y-10 px-4 sm:px-6 lg:px-12 w-full bg-background py-12">
+      <div className="w-full flex flex-col gap-3 pb-8 border-b-2 border-border">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Browse</p>
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight">Available Courses</h1>
+        <p className="text-muted-foreground/70 max-w-2xl text-sm">
+          Deepen your spiritual understanding with our curated selection of transformative courses.
+        </p>
       </div>
       <div className="flex-1">
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
